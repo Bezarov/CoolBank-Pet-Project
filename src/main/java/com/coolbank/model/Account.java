@@ -19,7 +19,7 @@ public class Account {
     private String currency;
 
     @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
-    private User user;
+    private Users users;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Card> cards;
@@ -29,7 +29,7 @@ public class Account {
 
     public Account(UUID id, String accountNumber, String accountHolderName, Double balance,
                    String accountType, LocalDateTime createdDate, String status,
-                   String currency, User user, List<Card> cards) {
+                   String currency, Users users, List<Card> cards) {
         this.id = id;
         this.accountNumber = accountNumber;
         this.accountHolderName = accountHolderName;
@@ -38,7 +38,7 @@ public class Account {
         this.createdDate = createdDate;
         this.status = status;
         this.currency = currency;
-        this.user = user;
+        this.users = users;
         this.cards = cards;
     }
 
@@ -106,12 +106,12 @@ public class Account {
         this.currency = currency;
     }
 
-    public User getUser() {
-        return user;
+    public Users getUser() {
+        return users;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Users users) {
+        this.users = users;
     }
 
     public List<Card> getCards() {

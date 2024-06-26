@@ -54,7 +54,7 @@
         <artifactId>postgresql</artifactId>
         <scope>runtime</scope>
     </dependency>
-    <!--My DB -->
+    <!--Alexandr Bezarov H2 DB -->
     <dependency>
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>

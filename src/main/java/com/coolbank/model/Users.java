@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-public class User {
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -18,14 +18,14 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JoinColumn(name = "account_id")
     private Account account;
 
-    public User() {}
+    public Users() {}
 
-    public User(UUID id, String email, String password,
-                String firstName, String lastName, LocalDateTime createdDate,
-                String status, Account account) {
+    public Users(UUID id, String email, String password,
+                 String firstName, String lastName, LocalDateTime createdDate,
+                 String status, Account account) {
         this.id = id;
         this.email = email;
         this.password = password;
