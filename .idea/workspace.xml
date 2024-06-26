@@ -4,21 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed757d1d-5e72-4ccb-9469-31964ca2276b" name="Changes" comment="Created models - Account, Card, Payment, User&#10;Changed pom.xml file">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/CoolBankApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/repository/CardRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/service/CardService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/service/CardServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+    <list default="true" id="ed757d1d-5e72-4ccb-9469-31964ca2276b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/coolbank/config/CoolBankProjectConfig.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Account.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Card.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Payment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/coolbank/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Users.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +28,23 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/coolbank/CoolBankApplication.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/coolbank/model/Account.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/coolbank/model/Card.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/coolbank/model/Payment.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/coolbank/model/Users.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/coolbank/repository/CardRepository.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/coolbank/service/CardService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/coolbank/service/CardServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/resources/application.properties" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -63,6 +73,11 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "spring.configuration.checksum": "79c22d20877af93891a978b710feda8e"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "h2"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
@@ -103,7 +118,7 @@
       <workItem from="1719229777906" duration="5000" />
       <workItem from="1719231712421" duration="1195000" />
       <workItem from="1719252558553" duration="601000" />
-      <workItem from="1719307388018" duration="9922000" />
+      <workItem from="1719307388018" duration="20841000" />
     </task>
     <task id="LOCAL-00001" summary="Init">
       <created>1719252578778</created>
@@ -112,7 +127,28 @@
       <option name="project" value="LOCAL" />
       <updated>1719252578778</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Created CoolBankApplication as a entry point.&#10;Created models - Account, Card, Payment, User.&#10;Added Service Card.&#10;Changed pom.xml file.&#10;Added application.properties for H2 DB.">
+      <created>1719393911161</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1719393911161</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Fixed DB relationships between models">
+      <created>1719397499928</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1719397499928</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Changed model name from User to Users (User model reserved SQL keyword)">
+      <created>1719401189871</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1719401189871</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -120,6 +156,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Init" />
-    <option name="LAST_COMMIT_MESSAGE" value="Init" />
+    <MESSAGE value="Created CoolBankApplication as a entry point.&#10;Created models - Account, Card, Payment, User.&#10;Added Service Card.&#10;Changed pom.xml file.&#10;Added application.properties for H2 DB." />
+    <MESSAGE value="Fixed DB relationships between models" />
+    <MESSAGE value="Changed model name from User to Users (User model reserved SQL keyword)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed model name from User to Users (User model reserved SQL keyword)" />
   </component>
 </project>

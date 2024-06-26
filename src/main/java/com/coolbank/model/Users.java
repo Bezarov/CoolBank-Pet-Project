@@ -1,33 +1,36 @@
 package com.coolbank.model;
 
-import javax.persistence.*;
+
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class User {
+public class Users {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String firstName;
     private String lastName;
     private String email;
+    private String phoneNumber;
     private String password;
     private LocalDateTime createdDate;
     private String status;
 
-    @OneToOne(mappedBy = "account_id",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
-    private Account account;
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Account> account;
 
-    public User() {}
+    public Users() {}
 
-    public User(UUID id, String email, String password,
-                String firstName, String lastName, LocalDateTime createdDate,
-                String status, Account account) {
+    public Users(UUID id, String email, String password,
+                 String firstName, String lastName, LocalDateTime createdDate,
+                 String status, List<Account> account, String phoneNumber) {
         this.id = id;
         this.email = email;
+        this.phoneNumber = phoneNumber;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -92,11 +95,19 @@ public class User {
         this.status = status;
     }
 
-    public Account getAccount() {
+    public List<Account> getAccount() {
         return account;
     }
 
-    public void setAccount(Account account) {
+    public void setAccount(List<Account> account) {
         this.account = account;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

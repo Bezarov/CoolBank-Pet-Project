@@ -35,5 +35,5 @@ out/
 ##############################
 ## H2 DB
 ##############################
-src/main/java/com/coolbank/Log/
-src/main/resources/db/
+src/main/java/com/coolbank/Log/*
+src/main/resources/db/*

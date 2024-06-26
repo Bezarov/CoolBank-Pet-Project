@@ -1,6 +1,8 @@
 package com.coolbank.model;
 
-import javax.persistence.*;
+
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -8,7 +10,7 @@ import java.util.UUID;
 @Entity
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String accountNumber;
     private String accountHolderName;
@@ -18,13 +20,11 @@ public class Account {
     private String status;
     private String currency;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "users_id")
+    private Users users;
 
-    @OneToMany(mappedBy = "id",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Card> cards;
 
     public Account() {
@@ -32,7 +32,7 @@ public class Account {
 
     public Account(UUID id, String accountNumber, String accountHolderName, Double balance,
                    String accountType, LocalDateTime createdDate, String status,
-                   String currency, User user, List<Card> cards) {
+                   String currency, Users users, List<Card> cards) {
         this.id = id;
         this.accountNumber = accountNumber;
         this.accountHolderName = accountHolderName;
@@ -41,7 +41,7 @@ public class Account {
         this.createdDate = createdDate;
         this.status = status;
         this.currency = currency;
-        this.user = user;
+        this.users = users;
         this.cards = cards;
     }
 
@@ -109,12 +109,12 @@ public class Account {
         this.currency = currency;
     }
 
-    public User getUser() {
-        return user;
+    public Users getUser() {
+        return users;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Users users) {
+        this.users = users;
     }
 
     public List<Card> getCards() {
