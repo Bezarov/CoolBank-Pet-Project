@@ -1,30 +1,42 @@
 package com.coolbank.model;
 
-import java.math.BigDecimal;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Entity
 public class Payment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    private String fromAccount;
-    private String toAccount;
     private Double amount;
-    private LocalDateTime transactionDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account fromAccount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account toAccount;
+    private LocalDateTime paymentDate;
+    private String paymentType;
     private String status;
+
     private String description;
 
     public Payment() {
     }
 
-    public Payment(UUID id, String fromAccount, String toAccount,
-                   Double amount, LocalDateTime transactionDate,
-                   String status, String description) {
+    public Payment(UUID id, Double amount, LocalDateTime paymentDate,
+                   String paymentType, String status, Account fromAccount,
+                   Account toAccount, String description) {
         this.id = id;
+        this.amount = amount;
+        this.paymentDate = paymentDate;
+        this.paymentType = paymentType;
+        this.status = status;
         this.fromAccount = fromAccount;
         this.toAccount = toAccount;
-        this.amount = amount;
-        this.transactionDate = transactionDate;
-        this.status = status;
         this.description = description;
     }
 
@@ -36,22 +48,6 @@ public class Payment {
         this.id = id;
     }
 
-    public String getFromAccount() {
-        return fromAccount;
-    }
-
-    public void setFromAccount(String fromAccount) {
-        this.fromAccount = fromAccount;
-    }
-
-    public String getToAccount() {
-        return toAccount;
-    }
-
-    public void setToAccount(String toAccount) {
-        this.toAccount = toAccount;
-    }
-
     public Double getAmount() {
         return amount;
     }
@@ -60,12 +56,20 @@ public class Payment {
         this.amount = amount;
     }
 
-    public LocalDateTime getTransactionDate() {
-        return transactionDate;
+    public LocalDateTime getPaymentDate() {
+        return paymentDate;
     }
 
-    public void setTransactionDate(LocalDateTime transactionDate) {
-        this.transactionDate = transactionDate;
+    public void setPaymentDate(LocalDateTime paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
     }
 
     public String getStatus() {
@@ -74,6 +78,22 @@ public class Payment {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Account getFromAccount() {
+        return fromAccount;
+    }
+
+    public void setFromAccount(Account fromAccount) {
+        this.fromAccount = fromAccount;
+    }
+
+    public Account getToAccount() {
+        return toAccount;
+    }
+
+    public void setToAccount(Account toAccount) {
+        this.toAccount = toAccount;
     }
 
     public String getDescription() {

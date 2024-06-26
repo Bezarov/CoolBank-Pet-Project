@@ -1,15 +1,21 @@
 package com.coolbank.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Entity
 public class Card {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String cardNumber;
     private String cardHolderName;
     private String cardHolderUUID;
     private LocalDate expirationDate;
     private String cvv;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
     private Account account;
     private String status;
 
