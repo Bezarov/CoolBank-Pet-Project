@@ -16,9 +16,9 @@ public class User {
     private LocalDateTime createdDate;
     private String status;
 
-    @OneToOne(mappedBy = "account_id",
-            cascade = CascadeType.ALL,
+    @OneToOne(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
     public User() {}

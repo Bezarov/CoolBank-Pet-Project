@@ -18,13 +18,10 @@ public class Account {
     private String status;
     private String currency;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     private User user;
 
-    @OneToMany(mappedBy = "id",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Card> cards;
 
     public Account() {

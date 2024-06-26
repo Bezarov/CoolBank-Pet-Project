@@ -14,7 +14,7 @@ public class Card {
     private String cardHolderUUID;
     private LocalDate expirationDate;
     private String cvv;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
     private Account account;
     private String status;
