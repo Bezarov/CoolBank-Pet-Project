@@ -1,13 +1,15 @@
 package com.coolbank.model;
 
-import javax.persistence.*;
+
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
 public class Card {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String cardNumber;
     private String cardHolderName;

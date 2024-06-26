@@ -1,13 +1,14 @@
 package com.coolbank.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private Double amount;
 

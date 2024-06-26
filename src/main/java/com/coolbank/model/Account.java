@@ -1,6 +1,8 @@
 package com.coolbank.model;
 
-import javax.persistence.*;
+
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -8,7 +10,7 @@ import java.util.UUID;
 @Entity
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String accountNumber;
     private String accountHolderName;
@@ -18,7 +20,8 @@ public class Account {
     private String status;
     private String currency;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "users_id")
     private Users users;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
