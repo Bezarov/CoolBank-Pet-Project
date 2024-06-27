@@ -1,45 +1,40 @@
 -- Users
 INSERT INTO users (id, created_date, email, first_name, last_name, password, phone_number, status) VALUES
-('1e8c6265-1c1d-4e89-8d5a-9f776de0842e', CURRENT_TIMESTAMP, 'john.doe@example.com', 'John', 'Doe', 'password', '1234567890', 'ACTIVE'),
-('e6f7008c-758b-4a3a-8b7d-7d0d5f638b2f', CURRENT_TIMESTAMP, 'jane.smith@example.com', 'Jane', 'Smith', 'password', '0987654321', 'ACTIVE'),
-('d4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', CURRENT_TIMESTAMP, 'alice.jones@example.com', 'Alice', 'Jones', 'password', '1122334455', 'ACTIVE');
-
+('1e8c6265-1c1d-4e89-8d5a-9f776de0842e', FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'john.doe@example.com', 'John', 'Doe', 'password', '1234567890', 'ACTIVE'),
+('480f46eb-a046-4ef8-b5fb-c02d96c89264', FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'jane.smith@example.com', 'Jane', 'Smith', 'password', '0987654321', 'ACTIVE'),
+('d4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'alice.jones@example.com', 'Alice', 'Jones', 'password', '1122334455', 'ACTIVE');
 -- Accounts for John Doe
-INSERT INTO account (id, balance, created_date, users_id, account_holder_name, account_number, account_type, currency, status) VALUES
-('8a73b8b1-45f4-4c82-9f2d-9e4b2e3a3b1a', 1000.00, CURRENT_TIMESTAMP, '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', 'John Doe', '1234567890', 'SAVINGS', 'USD', 'ACTIVE'),
-('8b84c8d1-75f5-4d83-9f2e-9e4c3f3a4b2b', 2000.00, CURRENT_TIMESTAMP, '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', 'John Doe', '2345678901', 'CHECKING', 'EUR', 'ACTIVE'),
-('8c95d9e2-85g6-4e94-9f3f-9e5d4f4a5c3c', 3000.00, CURRENT_TIMESTAMP, '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', 'John Doe', '3456789012', 'BUSINESS', 'GBP', 'ACTIVE');
-
--- Cards for John's accounts
-INSERT INTO card (id, expiration_date, account_id, card_holder_name, card_holderuuid, card_number, cvv, status) VALUES
-('f34b3d7c-3c39-4c9e-bc75-3d7d3e9f2f1b', '2025-12-31', '8a73b8b1-45f4-4c82-9f2d-9e4b2e3a3b1a', 'John Doe', '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', '1111-2222-3333-4444', '123', 'ACTIVE'),
-('g45c4e8d-4d4a-4d94-bc85-4d8d4f4a6d4d', '2026-11-30', '8a73b8b1-45f4-4c82-9f2d-9e4b2e3a3b1a', 'John Doe', '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', '5555-6666-7777-8888', '456', 'ACTIVE');
-
--- Repeat similar INSERT statements for other accounts and cards
+INSERT INTO account (balance, created_date, id, users_id, account_holder_name, account_number, account_type, currency, status) VALUES
+(1000.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'c09f380e-08cd-4a6f-a01f-e373950f995f', '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', 'John Doe', '1234567890', 'SAVINGS', 'USD', 'ACTIVE'),
+(1000.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), '0d5b8bd3-9dd1-4ac8-b353-00010e64eb55', '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', 'John Doe', '3214567890', 'SAVINGS', 'USD', 'ACTIVE'),
+(2000.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), '289de4e6-c8b6-4aac-9443-bfa5403453de', '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', 'John Doe', '2345678901', 'CHECKING', 'EUR', 'ACTIVE'),
+(3000.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'cddc1fd7-fd00-4953-ab81-0147ec5a1efd', '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', 'John Doe', '3456789012', 'BUSINESS', 'MDL', 'ACTIVE');
+-- Cards for John Doe accounts
+INSERT INTO card (expiration_date, account_id, id, card_holder_name, card_holderuuid, card_number, cvv, status) VALUES
+('2025-12-29', 'c09f380e-08cd-4a6f-a01f-e373950f995f', 'd2b6bfcc-c256-4fb0-8558-4b392f790eff', 'John Doe', '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', '1111-2222-3333-4444', '123', 'ACTIVE'),
+('2026-09-28', 'c09f380e-08cd-4a6f-a01f-e373950f995f', '98fc6ef6-77b1-4a16-bd70-59676189a216', 'John Doe', '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', '2222-6666-7777-8888', '456', 'ACTIVE'),
+('2027-03-01', '0d5b8bd3-9dd1-4ac8-b353-00010e64eb55', '2698d0d5-6231-456e-9013-9b0bd43a53ea', 'John Doe', '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', '3333-2222-3333-4444', '321', 'ACTIVE'),
+('2028-11-04', '289de4e6-c8b6-4aac-9443-bfa5403453de', '67ee3fe1-cff4-4859-89f7-9ec20b037474', 'John Doe', '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', '4444-2222-3333-4444', '543', 'ACTIVE'),
+('2021-10-09', 'cddc1fd7-fd00-4953-ab81-0147ec5a1efd', 'b36595e7-cbfc-44a9-a37b-95a7f2a67c28', 'John Doe', '1e8c6265-1c1d-4e89-8d5a-9f776de0842e', '5555-2222-3333-4444', '789', 'ACTIVE');
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Accounts for Jane Smith
-INSERT INTO account (id, balance, created_date, users_id, account_holder_name, account_number, account_type, currency, status) VALUES
-('9f22b47e-9237-4d4e-b0ff-7d8d7a0f15d7', 2500.00, CURRENT_TIMESTAMP, 'e6f7008c-758b-4a3a-8b7d-7d0d5f638b2f', 'Jane Smith', '4567890123', 'SAVINGS', 'USD', 'ACTIVE'),
-('9g33c8d2-83h7-4d95-9f4g-9f5e4f5a6d5e', 3500.00, CURRENT_TIMESTAMP, 'e6f7008c-758b-4a3a-8b7d-7d0d5f638b2f', 'Jane Smith', '5678901234', 'CHECKING', 'EUR', 'ACTIVE'),
-('9h44d9e3-94i8-4e96-9f5h-9g6f5g6a7d6f', 4500.00, CURRENT_TIMESTAMP, 'e6f7008c-758b-4a3a-8b7d-7d0d5f638b2f', 'Jane Smith', '6789012345', 'BUSINESS', 'GBP', 'ACTIVE');
-
--- Cards for Jane's accounts
-INSERT INTO card (id, expiration_date, account_id, card_holder_name, card_holderuuid, card_number, cvv, status) VALUES
-('g56d4e9d-4d5a-4e95-bd96-5d9e5g5a7e6d', '2025-12-31', '9f22b47e-9237-4d4e-b0ff-7d8d7a0f15d7', 'Jane Smith', 'e6f7008c-758b-4a3a-8b7d-7d0d5f638b2f', '2222-3333-4444-5555', '789', 'ACTIVE'),
-('h67e5f0e-5e6b-5f06-ce07-6e7f6h6a8f7e', '2026-11-30', '9f22b47e-9237-4d4e-b0ff-7d8d7a0f15d7', 'Jane Smith', 'e6f7008c-758b-4a3a-8b7d-7d0d5f638b2f', '6666-7777-8888-9999', '012', 'ACTIVE');
-
+INSERT INTO account (balance, created_date, id, users_id, account_holder_name, account_number, account_type, currency, status) VALUES
+(1800.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'b33ecf44-1071-43b1-8c28-67e274cccd60', '480f46eb-a046-4ef8-b5fb-c02d96c89264', 'Jane Smith', '5434567890', 'SAVINGS', 'EUR', 'ACTIVE'),
+(-1000.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'ed1734d2-38df-4d6e-9a55-aaa5b88f2996', '480f46eb-a046-4ef8-b5fb-c02d96c89264', 'Jane Smith', '7324567890', 'SAVINGS', 'MDL', 'ACTIVE');
+-- Cards for Jane Smith accounts
+INSERT INTO card (expiration_date, account_id, id, card_holder_name, card_holderuuid, card_number, cvv, status) VALUES
+('2025-12-31', 'b33ecf44-1071-43b1-8c28-67e274cccd60', '4bc989a5-e51a-4699-a186-2d3a4b6024a5', 'Jane Smith', '480f46eb-a046-4ef8-b5fb-c02d96c89264', '6666-2222-3333-4444', '421', 'ACTIVE'),
+('2026-09-30', 'ed1734d2-38df-4d6e-9a55-aaa5b88f2996', '45a2623d-f577-44ed-a35f-c046b55556c2', 'Jane Smith', '480f46eb-a046-4ef8-b5fb-c02d96c89264', '7777-6666-7777-8888', '123', 'ACTIVE');
 -- Accounts for Alice Jones
-INSERT INTO account (id, balance, created_date, users_id, account_holder_name, account_number, account_type, currency, status) VALUES
-('af33c8d3-94i9-4f07-9g6i-9h7g6h7a8e7g', 1500.00, CURRENT_TIMESTAMP, 'd4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', 'Alice Jones', '7890123456', 'SAVINGS', 'USD', 'ACTIVE'),
-('bg44d9e4-95j0-4g18-9h7j-9i8h7h8a9f8h', 2500.00, CURRENT_TIMESTAMP, 'd4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', 'Alice Jones', '8901234567', 'CHECKING', 'EUR', 'ACTIVE'),
-('ch55e0f5-06k1-4h29-9i8k-9j9i8i9a0g9i', 3500.00, CURRENT_TIMESTAMP, 'd4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', 'Alice Jones', '9012345678', 'BUSINESS', 'GBP', 'ACTIVE');
-
--- Cards for Alice's accounts
-INSERT INTO card (id, expiration_date, account_id, card_holder_name, card_holderuuid, card_number, cvv, status) VALUES
-('h78e5f0f-5e6b-5f06-ce07-6e7f6h6a8f7e', '2025-12-31', 'af33c8d3-94i9-4f07-9g6i-9h7g6h7a8e7g', 'Alice Jones', 'd4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', '3333-4444-5555-6666', '345', 'ACTIVE'),
-('i89f6g0g-6f7c-6g17-df18-7f8h7i7a9g8h', '2026-11-30', 'af33c8d3-94i9-4f07-9g6i-9h7g6h7a8e7g', 'Alice Jones', 'd4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', '7777-8888-9999-0000', '678', 'ACTIVE');
-
+INSERT INTO account (balance, created_date, id, users_id, account_holder_name, account_number, account_type, currency, status) VALUES
+(1000.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'e7b9ea34-9bd3-4625-81d4-ac53fa843686', 'd4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', 'Jane Smith', '5434567890', 'SAVINGS', 'EUR', 'ACTIVE'),
+(-8000.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), '9f205c92-b6ae-438e-a5fd-ce2e815d3f7e', 'd4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', 'Jane Smith', '7324567890', 'SAVINGS', 'MDL', 'ACTIVE');
+-- Cards for Alice Jones accounts
+INSERT INTO card (expiration_date, account_id, id, card_holder_name, card_holderuuid, card_number, cvv, status) VALUES
+('2025-12-31', 'e7b9ea34-9bd3-4625-81d4-ac53fa843686', '6e0b7527-d115-4b5d-8615-010774db74f1', 'Jane Smith', 'd4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', '6666-2222-3333-4444', '421', 'ACTIVE'),
+('2026-09-30', '9f205c92-b6ae-438e-a5fd-ce2e815d3f7e', '723bd28a-c991-4dce-895c-7a6253b3e731', 'Jane Smith', 'd4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', '7777-6666-7777-8888', '123', 'ACTIVE');
 -- Payments
-INSERT INTO payment (id, amount, payment_date, account_id, description, payment_type, status) VALUES
-('p1', 200.00, CURRENT_TIMESTAMP, '8a73b8b1-45f4-4c82-9f2d-9e4b2e3a3b1a', 'Transfer to Jane', 'TRANSFER', 'COMPLETED'),
-('p2', 150.00, CURRENT_TIMESTAMP, '9f22b47e-9237-4d4e-b0ff-7d8d7a0f15d7', 'Payment to Alice', 'TRANSFER', 'PENDING'),
-('p3', 100.00, CURRENT_TIMESTAMP, 'af33c8d3-94i9-4f07-9g6i-9h7g6h7a8e7g', 'Transfer to John', 'TRANSFER', 'COMPLETED');
+INSERT INTO payment (amount, payment_date, from_account_id, id, to_account_id, description, payment_type, status) VALUES
+(200.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'c09f380e-08cd-4a6f-a01f-e373950f995f', 'f3371556-c57d-4f04-83e4-575120ce8c1d', 'b33ecf44-1071-43b1-8c28-67e274cccd60', 'Transfer to Jane', 'TRANSFER', 'COMPLETED'),
+(150.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'b33ecf44-1071-43b1-8c28-67e274cccd60', '5e37c6fa-7b7d-432f-b466-732498b37f6f', 'e7b9ea34-9bd3-4625-81d4-ac53fa843686', 'Payment to Alice', 'TRANSFER', 'PENDING'),
+(100.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'e7b9ea34-9bd3-4625-81d4-ac53fa843686', 'f3a3c171-512a-4550-b933-89d24d59597f', 'cddc1fd7-fd00-4953-ab81-0147ec5a1efd', 'Transfer to John', 'TRANSFER', 'COMPLETED');

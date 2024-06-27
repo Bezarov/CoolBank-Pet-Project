@@ -11,13 +11,11 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private Double amount;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", insertable = false, updatable = false)
+    @JoinColumn(name = "from_account_id")
     private Account fromAccount;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", insertable = false, updatable = false)
+    @JoinColumn(name = "to_account_id")
     private Account toAccount;
     private LocalDateTime paymentDate;
     private String paymentType;

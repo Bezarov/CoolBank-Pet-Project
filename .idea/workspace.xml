@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ed757d1d-5e72-4ccb-9469-31964ca2276b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Account.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Payment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/model/Users.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data.sql" afterDir="false" />
     </list>
@@ -64,6 +60,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
@@ -118,7 +115,9 @@
       <workItem from="1719229777906" duration="5000" />
       <workItem from="1719231712421" duration="1195000" />
       <workItem from="1719252558553" duration="601000" />
-      <workItem from="1719307388018" duration="20841000" />
+      <workItem from="1719307388018" duration="22484000" />
+      <workItem from="1719482698185" duration="2603000" />
+      <workItem from="1719492204735" duration="2098000" />
     </task>
     <task id="LOCAL-00001" summary="Init">
       <created>1719252578778</created>
@@ -148,7 +147,21 @@
       <option name="project" value="LOCAL" />
       <updated>1719401189871</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Changed model name from User to Users (User model reserved SQL keyword)">
+      <created>1719411484835</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1719411484835</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Changed Payment model, and added to gitignore resources directory">
+      <created>1719492111679</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1719492111679</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -159,6 +172,7 @@
     <MESSAGE value="Created CoolBankApplication as a entry point.&#10;Created models - Account, Card, Payment, User.&#10;Added Service Card.&#10;Changed pom.xml file.&#10;Added application.properties for H2 DB." />
     <MESSAGE value="Fixed DB relationships between models" />
     <MESSAGE value="Changed model name from User to Users (User model reserved SQL keyword)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed model name from User to Users (User model reserved SQL keyword)" />
+    <MESSAGE value="Changed Payment model, and added to gitignore resources directory" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed Payment model, and added to gitignore resources directory" />
   </component>
 </project>
