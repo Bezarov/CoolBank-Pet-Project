@@ -2,6 +2,8 @@ package com.coolbank.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 
 import java.time.LocalDateTime;
 import java.util.List;
