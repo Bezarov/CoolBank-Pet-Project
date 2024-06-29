@@ -1,12 +1,15 @@
 package com.coolbank.dto;
 
-public class UsersDto {
+import com.coolbank.model.Payment;
+import com.coolbank.model.Users;
+
+public class UsersDTO {
      private String firstName;
      private String lastName;
      private String email;
      private String phoneNumber;
 
-     public UsersDto(String firstName, String lastName, String email, String phoneNumber) {
+     public UsersDTO(String firstName, String lastName, String email, String phoneNumber) {
           this.firstName = firstName;
           this.lastName = lastName;
           this.email = email;
@@ -43,5 +46,14 @@ public class UsersDto {
 
      public void setPhoneNumber(String phoneNumber) {
           this.phoneNumber = phoneNumber;
+     }
+
+     public static UsersDTO mappToUserDTO(Users users){
+          return new UsersDTO(
+                  users.getFirstName(),
+                  users.getLastName(),
+                  users.getEmail(),
+                  users.getPhoneNumber()
+          );
      }
 }
