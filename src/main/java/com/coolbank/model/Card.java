@@ -13,7 +13,7 @@ public class Card {
     private UUID id;
     private String cardNumber;
     private String cardHolderName;
-    private String cardHolderUUID;
+    private UUID cardHolderUUID;
     private LocalDate expirationDate;
     private String cvv;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -25,7 +25,7 @@ public class Card {
     }
 
     public Card(UUID id, String cardNumber, String cardHolderName,
-                String cardHolderUUID, LocalDate expirationDate,
+                UUID cardHolderUUID, LocalDate expirationDate,
                 String cvv, Account account, String status) {
         this.id = id;
         this.cardNumber = cardNumber;
@@ -61,11 +61,11 @@ public class Card {
         this.cardHolderName = cardHolderName;
     }
 
-    public String getCardHolderUUID() {
+    public UUID getCardHolderUUID() {
         return cardHolderUUID;
     }
 
-    public void setCardHolderUUID(String cardHolderUUID) {
+    public void setCardHolderUUID(UUID cardHolderUUID) {
         this.cardHolderUUID = cardHolderUUID;
     }
 
