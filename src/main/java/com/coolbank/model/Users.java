@@ -2,8 +2,6 @@ package com.coolbank.model;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,7 +23,8 @@ public class Users {
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Account> account;
 
-    public Users() {}
+    public Users() {
+    }
 
     public Users(UUID id, String email, String password,
                  String firstName, String lastName, LocalDateTime createdDate,
