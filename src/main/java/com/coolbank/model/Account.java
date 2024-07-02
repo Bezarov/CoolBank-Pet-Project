@@ -12,7 +12,7 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private String accountNumber;
+    private String accountName;
     private String accountHolderName;
     private Double balance;
     private String accountType;
@@ -30,11 +30,11 @@ public class Account {
     public Account() {
     }
 
-    public Account(UUID id, String accountNumber, String accountHolderName, Double balance,
+    public Account(UUID id, String accountName, String accountHolderName, Double balance,
                    String accountType, LocalDateTime createdDate, String status,
                    String currency, Users users, List<Card> cards) {
         this.id = id;
-        this.accountNumber = accountNumber;
+        this.accountName = accountName;
         this.accountHolderName = accountHolderName;
         this.balance = balance;
         this.accountType = accountType;
@@ -53,12 +53,12 @@ public class Account {
         this.id = id;
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
+    public String getAccountName() {
+        return accountName;
     }
 
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 
     public String getAccountHolderName() {
