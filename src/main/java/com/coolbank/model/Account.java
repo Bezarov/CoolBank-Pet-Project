@@ -30,11 +30,11 @@ public class Account {
     public Account() {
     }
 
-    public Account(UUID id, String accountNumber, String accountHolderName, Double balance,
+    public Account(UUID id, String accountName, String accountHolderName, Double balance,
                    String accountType, LocalDateTime createdDate, String status,
                    String currency, Users users, List<Card> cards) {
         this.id = id;
-        this.accountName = accountNumber;
+        this.accountName = accountName;
         this.accountHolderName = accountHolderName;
         this.balance = balance;
         this.accountType = accountType;
@@ -57,8 +57,8 @@ public class Account {
         return accountName;
     }
 
-    public void setAccountName(String accountNumber) {
-        this.accountName = accountNumber;
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 
     public String getAccountHolderName() {
