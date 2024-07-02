@@ -39,8 +39,3 @@ src/main/java/com/coolbank/Log/*
 src/main/resources/*
 src/main/resources/application.properties
 src/main/resources/data.sql
-<<<<<<< Add_DTO
-/.idea/
-=======
-/.idea/
->>>>>>> main
