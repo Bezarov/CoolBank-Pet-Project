@@ -18,11 +18,11 @@ public interface UsersService {
 
     UsersDTO updateUser(UUID userId, UsersDTO usersDTO);
 
-    UsersDTO updatePasswordById(UUID userId, String password);
+    UsersDTO updatePasswordById(UUID userId, String newPassword);
 
     void deleteUserById(UUID userId);
 
     void deleteUserByEmail(String userEmail);
 
-    void deleteUserByLastName(String userLastName);
+    void deleteUserByFullName(String userFullName);
 }
