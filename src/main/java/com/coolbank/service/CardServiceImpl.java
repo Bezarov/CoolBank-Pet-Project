@@ -1,10 +1,10 @@
 package com.coolbank.service;
 
 import com.coolbank.dto.CardDTO;
-import com.coolbank.dto.UsersDTO;
+import com.coolbank.model.Card;
 import com.coolbank.repository.AccountRepository;
 import com.coolbank.repository.CardRepository;
-import com.coolbank.repository.UserRepository;
+import com.coolbank.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +15,29 @@ import java.util.UUID;
 public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
 
     @Autowired
     public CardServiceImpl(CardRepository cardRepository,
-                           AccountRepository accountRepository, UserRepository userRepository) {
+                           AccountRepository accountRepository, UsersRepository usersRepository) {
         this.cardRepository = cardRepository;
         this.accountRepository = accountRepository;
-        this.userRepository = userRepository;
+        this.usersRepository = usersRepository;
     }
 
+    private CardDTO convertCardModelToDTO(Card card) {
+        CardDTO cardDTO = new CardDTO();
+        cardDTO.setCardNumber(card.getCardNumber());
+        cardDTO.setCardHolderFullName(card.getCardHolderFullName());
+        cardDTO.setExpirationDate(card.getExpirationDate());
+        cardDTO.setCvv(card.getCvv());
+        cardDTO.setStatus(card.getStatus());
+        cardDTO.setAccount(card.getAccount());
+        return cardDTO;
+    }
 
     @Override
-    public CardDTO createCard(UUID accountId, UsersDTO usersDTO) {
+    public CardDTO createCard(UUID accountId, CardDTO cardDTO) {
         return null;
     }
 
@@ -38,6 +48,11 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public CardDTO getCardByCardNumber(String cardNumber) {
+        return null;
+    }
+
+    @Override
+    public CardDTO getCardByCardHolderFullName(String cardHolderFullName) {
         return null;
     }
 
@@ -53,6 +68,16 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public List<CardDTO> getAllUserCardsByStatus(UUID holderId, String status) {
+        return null;
+    }
+
+    @Override
+    public List<CardDTO> getAllExpiredCard(UUID holderID) {
+        return null;
+    }
+
+    @Override
+    public List<CardDTO> getAllNotExpiredCard(UUID holderID) {
         return null;
     }
 

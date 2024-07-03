@@ -1,4 +1,4 @@
 package com.coolbank.controller;
 
-public class UserController {
+public class UsersController {
 }

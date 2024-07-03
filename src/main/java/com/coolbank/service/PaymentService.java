@@ -9,13 +9,13 @@ import java.util.UUID;
 public interface PaymentService {
     PaymentDTO createPayment(PaymentDTO paymentDTO);
 
-    PaymentDTO getPaymentById(UUID id);
+    PaymentDTO getPaymentById(UUID paymentId);
 
-    PaymentDTO getPaymentByStatus(UUID id, String status);
+    List<PaymentDTO> getPaymentsByStatus(UUID fromAccountId, String status);
 
-    List<PaymentDTO> getAllAccountPaymentsByFromAccount(UUID accountId);
+    List<PaymentDTO> getAllAccountPaymentsByFromAccount(UUID fromAccountId);
 
-    List<PaymentDTO> getAllAccountPaymentsByToAccount(UUID accountId);
+    List<PaymentDTO> getAllAccountPaymentsByToAccount(UUID toAccountId);
 
     List<PaymentDTO> getAllAccountPaymentsByPaymentType(UUID fromAccountId,
                                                         String paymentType);

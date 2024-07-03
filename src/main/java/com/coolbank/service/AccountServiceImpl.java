@@ -1,32 +1,61 @@
 package com.coolbank.service;
 
 import com.coolbank.dto.AccountDTO;
+import com.coolbank.model.Account;
+import com.coolbank.model.Users;
 import com.coolbank.repository.AccountRepository;
-import com.coolbank.repository.UserRepository;
+import com.coolbank.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository, UsersRepository usersRepository) {
         this.accountRepository = accountRepository;
-        this.userRepository = userRepository;
+        this.usersRepository = usersRepository;
+    }
+
+    private AccountDTO convertAccountModelToDTO(com.coolbank.model.Account account) {
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setAccountName(account.getAccountName());
+        accountDTO.setAccountHolderFullName(account.getAccountHolderFullName());
+        accountDTO.setAccountType(account.getAccountType());
+        accountDTO.setCreatedDate(account.getCreatedDate());
+        accountDTO.setBalance(account.getBalance());
+        accountDTO.setCards(account.getCards());
+        accountDTO.setStatus(account.getStatus());
+        return accountDTO;
+    }
+
+    private Account convertAccountDTOToModel(AccountDTO accountDTO, UUID usersUUID) {
+        Account account = new Account();
+        account.setAccountName(accountDTO.getAccountHolderFullName());
+        account.setAccountHolderFullName(accountDTO.getAccountHolderFullName());
+        account.setAccountType(accountDTO.getAccountType());
+        account.setCurrency(accountDTO.getCurrency());
+        account.setId(UUID.randomUUID());
+        account.setCreatedDate(LocalDateTime.now());
+        account.setBalance(0.0);
+        Users users = usersRepository.getById(usersUUID);
+        account.setUser(users);
+        return account;
     }
 
     @Override
-    public AccountDTO createAccount(AccountDTO accountDTO, UUID userId) {
+    public AccountDTO createAccount(UUID userId, AccountDTO accountDTO) {
         return null;
     }
 
     @Override
-    public AccountDTO getAccountByAccountNumber(String number) {
+    public AccountDTO getAccountByAccountName(String accountName) {
         return null;
     }
 
@@ -36,17 +65,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<AccountDTO> getAllUserAccountsByUserId(UUID userId) {
-        return null;
-    }
-
-    @Override
     public AccountDTO getAccountByUserId(UUID userId) {
         return null;
     }
 
     @Override
-    public AccountDTO getAccountByHolderName(String holderName) {
+    public List<AccountDTO> getAllUserAccountsByUserId(UUID userId) {
+        return null;
+    }
+
+    @Override
+    public AccountDTO getAccountByHolderFullName(String accountHolderFullName) {
         return null;
     }
 
@@ -71,12 +100,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO updateAccountBalanceById(UUID id, Double balance) {
+    public AccountDTO updateAccountBalanceById(UUID accountId, Double balance) {
         return null;
     }
 
     @Override
-    public AccountDTO updateAccountBalanceByAccountNumber(String number, Double balance) {
+    public AccountDTO updateAccountBalanceByAccountNumber(String accountNumber, Double balance) {
+        return null;
+    }
+
+    @Override
+    public AccountDTO updateAccountBalanceByAccountName(String accountName, Double balance) {
         return null;
     }
 

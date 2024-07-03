@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.UUID;
 
 public interface AccountService {
-    AccountDTO createAccount(AccountDTO accountDTO, UUID userId);
+    AccountDTO createAccount(UUID userId, AccountDTO accountDTO);
 
-    AccountDTO getAccountByAccountNumber(String number);
+    AccountDTO getAccountByAccountName(String accountName);
 
     AccountDTO getAccountById(UUID accountId);
 
-    List<AccountDTO> getAllUserAccountsByUserId(UUID userId);
-
     AccountDTO getAccountByUserId(UUID userId);
 
-    AccountDTO getAccountByHolderName(String holderName);
+    List<AccountDTO> getAllUserAccountsByUserId(UUID userId);
+
+    AccountDTO getAccountByHolderFullName(String accountHolderFullName);
 
     AccountDTO getBalanceByAccountId(UUID accountId);
 
@@ -26,9 +26,11 @@ public interface AccountService {
 
     AccountDTO updateAccountStatusById(UUID accountId, String status);
 
-    AccountDTO updateAccountBalanceById(UUID id, Double balance);
+    AccountDTO updateAccountBalanceById(UUID accountId, Double balance);
 
-    AccountDTO updateAccountBalanceByAccountNumber(String number, Double balance);
+    AccountDTO updateAccountBalanceByAccountNumber(String accountNumber, Double balance);
+
+    AccountDTO updateAccountBalanceByAccountName(String accountName, Double balance);
 
     void deleteAccountByAccountId(UUID accountId);
 

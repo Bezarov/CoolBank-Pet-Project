@@ -1,21 +1,22 @@
 package com.coolbank.service;
 
 import com.coolbank.dto.UsersDTO;
+import com.coolbank.model.Users;
 
 import java.util.UUID;
 
-public interface UserService {
-    UsersDTO createUser(UsersDTO usersDTO);
+public interface UsersService {
+    Users createUser(UsersDTO usersDTO);
 
     UsersDTO getUserById(UUID userId);
 
     UsersDTO getUserByEmail(String userEmail);
 
-    UsersDTO getUserByLastName(String userLastName);
+    UsersDTO getUserByFullName(String userFullName);
 
     UsersDTO getUserByPhoneNumber(String userPhoneNumber);
 
-    UsersDTO updateUser(UUID id, UsersDTO usersDTO);
+    UsersDTO updateUser(UUID userId, UsersDTO usersDTO);
 
     UsersDTO updatePasswordById(UUID userId, String password);
 
