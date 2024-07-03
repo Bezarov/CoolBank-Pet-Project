@@ -32,6 +32,9 @@ buildNumber.properties
 *.ipr
 *.iws
 out/
+# Operating system files
+.DS_Store
+Thumbs.db
 ##############################
 ## H2 DB
 ##############################
