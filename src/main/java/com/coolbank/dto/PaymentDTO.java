@@ -3,20 +3,40 @@ package com.coolbank.dto;
 import com.coolbank.model.Account;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-public class PaymentDto {
+public class PaymentDTO {
+    private UUID id;
     private Double amount;
     private Account fromAccount;
     private Account toAccount;
     private LocalDateTime paymentDate;
     private String status;
+    private String paymentType;
+    private String description;
 
-    public PaymentDto(Double amount, Account fromAccount, Account toAccount, LocalDateTime paymentDate, String status) {
+
+    public PaymentDTO() {
+    }
+
+    public PaymentDTO(UUID id, Double amount, Account fromAccount, Account toAccount, LocalDateTime paymentDate,
+                      String status, String paymentType, String description) {
+        this.id = id;
         this.amount = amount;
         this.fromAccount = fromAccount;
         this.toAccount = toAccount;
         this.paymentDate = paymentDate;
         this.status = status;
+        this.paymentType = paymentType;
+        this.description = description;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public Double getAmount() {
@@ -57,5 +77,21 @@ public class PaymentDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
