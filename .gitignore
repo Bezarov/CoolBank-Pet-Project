@@ -42,5 +42,6 @@ src/main/resources/data.sql
 ##############################
 ## Nikita Properties
 ##############################
-.idea
+.idea/
 src/main/resources
+target/
