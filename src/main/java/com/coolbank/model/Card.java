@@ -12,7 +12,7 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String cardNumber;
-    private String cardHolderName;
+    private String cardHolderFullName;
     private UUID cardHolderUUID;
     private LocalDate expirationDate;
     private String cvv;
@@ -24,12 +24,12 @@ public class Card {
     public Card() {
     }
 
-    public Card(UUID id, String cardNumber, String cardHolderName,
+    public Card(UUID id, String cardNumber, String cardHolderFullName,
                 UUID cardHolderUUID, LocalDate expirationDate,
                 String cvv, Account account, String status) {
         this.id = id;
         this.cardNumber = cardNumber;
-        this.cardHolderName = cardHolderName;
+        this.cardHolderFullName = cardHolderFullName;
         this.cardHolderUUID = cardHolderUUID;
         this.expirationDate = expirationDate;
         this.cvv = cvv;
@@ -53,12 +53,12 @@ public class Card {
         this.cardNumber = cardNumber;
     }
 
-    public String getCardHolderName() {
-        return cardHolderName;
+    public String getCardHolderFullName() {
+        return cardHolderFullName;
     }
 
-    public void setCardHolderName(String cardHolderName) {
-        this.cardHolderName = cardHolderName;
+    public void setCardHolderFullName(String cardHolderName) {
+        this.cardHolderFullName = cardHolderName;
     }
 
     public UUID getCardHolderUUID() {

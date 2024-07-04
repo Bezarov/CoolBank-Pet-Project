@@ -12,8 +12,7 @@ public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String email;
     private String phoneNumber;
     private String password;
@@ -27,14 +26,13 @@ public class Users {
     }
 
     public Users(UUID id, String email, String password,
-                 String firstName, String lastName, LocalDateTime createdDate,
+                 String fullName, LocalDateTime createdDate,
                  String status, List<Account> account, String phoneNumber) {
         this.id = id;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.fullName = fullName;
         this.createdDate = createdDate;
         this.status = status;
         this.account = account;
@@ -64,20 +62,12 @@ public class Users {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setFullName(String firstName) {
+        this.fullName = firstName;
     }
 
     public LocalDateTime getCreatedDate() {
