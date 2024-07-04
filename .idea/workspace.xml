@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ed757d1d-5e72-4ccb-9469-31964ca2276b" name="Changes" comment="Created models - Account, Card, Payment, User&#10;Changed pom.xml file">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/dto/CardDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_06_2024_19_46__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_06_2024_19_46__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_06_2024_19_46__Changes_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_06_2024_19_46__Changes_1.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/coolbank/dto/AccountDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/dto/AccountDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/coolbank/dto/PaymentDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/dto/PaymentDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/coolbank/dto/UsersDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/coolbank/dto/UsersDTO.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
