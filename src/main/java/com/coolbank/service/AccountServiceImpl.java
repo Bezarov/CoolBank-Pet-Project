@@ -27,7 +27,7 @@ public class AccountServiceImpl implements AccountService {
         this.usersRepository = usersRepository;
     }
 
-    private AccountDTO convertAccountModelToDTO(com.coolbank.model.Account account) {
+    private AccountDTO convertAccountModelToDTO(Account account) {
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setAccountName(account.getAccountName());
         accountDTO.setAccountHolderFullName(account.getAccountHolderFullName());
