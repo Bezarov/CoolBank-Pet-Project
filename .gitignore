@@ -26,22 +26,18 @@ buildNumber.properties
 ##############################
 ## IntelliJ
 ##############################
-out/
 .idea/
 .idea_modules/
 *.iml
 *.ipr
 *.iws
+out/
+# Operating system files
+.DS_Store
+Thumbs.db
 ##############################
 ## H2 DB
 ##############################
-src/main/java/com/coolbank/Log/*
-src/main/resources/*
+src/main/java/com/coolbank/log/*
+src/main/resources/db
 src/main/resources/application.properties
-src/main/resources/data.sql
-##############################
-## Nikita Properties
-##############################
-.idea/
-src/main/resources
-target/
