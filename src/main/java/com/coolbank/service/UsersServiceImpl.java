@@ -44,8 +44,11 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public Users createUser(UsersDTO usersDTO) {
-        Users users = convertUsersDTOToModel(usersDTO);
-        return usersRepository.save(users);
+        usersRepository.findByEmail(usersDTO.getEmail())
+                .ifPresent(EntityUser -> {throw new ResponseStatusException(
+                            HttpStatus.FOUND, "User with such Email ALREADY EXIST: " + usersDTO.getEmail());
+                });
+        return usersRepository.save(convertUsersDTOToModel(usersDTO));
     }
 
     @Override
@@ -81,8 +84,8 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public UsersDTO updateUser(UUID userId, UsersDTO usersDTO) {
-        return usersRepository.findById(userId)
+    public UsersDTO updateUser(UsersDTO usersDTO) {
+        return usersRepository.findById(usersDTO.getId())
                 .map(EntityUser -> {
                     EntityUser.setId(usersDTO.getId());
                     EntityUser.setFullName(usersDTO.getFullName());
@@ -93,7 +96,7 @@ public class UsersServiceImpl implements UsersService {
                     return convertUsersModelToDTO(EntityUser);
                 })
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userId));
+                        HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + usersDTO.getId()));
     }
 
     @Override
@@ -113,16 +116,22 @@ public class UsersServiceImpl implements UsersService {
         usersRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userId));
-
+        usersRepository.deleteById(userId);
     }
 
     @Override
     public void deleteUserByEmail(String userEmail) {
+        usersRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userEmail));
         usersRepository.deleteByEmail(userEmail);
     }
 
     @Override
     public void deleteUserByFullName(String userFullName) {
+        usersRepository.findByFullName(userFullName)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userFullName));
         usersRepository.deleteByFullName(userFullName);
     }
 }

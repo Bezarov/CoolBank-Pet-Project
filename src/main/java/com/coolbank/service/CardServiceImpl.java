@@ -6,6 +6,7 @@ import com.coolbank.repository.AccountRepository;
 import com.coolbank.repository.CardRepository;
 import com.coolbank.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,19 +26,20 @@ public class CardServiceImpl implements CardService {
         this.usersRepository = usersRepository;
     }
 
-    private CardDTO convertCardModelToDTO(Card card) {
+    private CardDTO convertCardModelToDTO(UUID accountId, Card card) {
         CardDTO cardDTO = new CardDTO();
         cardDTO.setCardNumber(card.getCardNumber());
         cardDTO.setCardHolderFullName(card.getCardHolderFullName());
         cardDTO.setExpirationDate(card.getExpirationDate());
         cardDTO.setCvv(card.getCvv());
         cardDTO.setStatus(card.getStatus());
-        cardDTO.setAccount(card.getAccount());
+        cardDTO.setAccount(accountRepository.findById(accountId).orElseThrow(() ->
+                new RuntimeException("Account ID Not Found in Database")));
         return cardDTO;
     }
 
     @Override
-    public CardDTO createCard(UUID accountId, CardDTO cardDTO) {
+    public ResponseEntity<String> createCard(CardDTO cardDTO) {
         return null;
     }
 

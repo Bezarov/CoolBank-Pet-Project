@@ -1,12 +1,13 @@
 package com.coolbank.service;
 
 import com.coolbank.dto.CardDTO;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface CardService {
-    CardDTO createCard(UUID accountId, CardDTO cardDTO);
+    ResponseEntity<String> createCard(CardDTO cardDTO);
 
     CardDTO getCardById(UUID cardId);
 
