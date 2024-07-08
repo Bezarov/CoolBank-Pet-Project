@@ -1,48 +1,37 @@
-package com.coolbank.model;
+package com.coolbank.dto;
 
-
-import jakarta.persistence.*;
+import com.coolbank.model.Card;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-public class Account {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+public class AccountDTO {
     private UUID id;
     private String accountName;
-    private String accountHolderFullName;
     private BigDecimal balance;
+    private String accountHolderFullName;
+    private String status;
     private String accountType;
     private LocalDateTime createdDate;
-    private String status;
     private String currency;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "users_id")
-    private Users users;
-
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Card> cards;
 
-    public Account() {
+    public AccountDTO() {
     }
 
-    public Account(UUID id, String accountName, String accountHolderFullName, BigDecimal balance,
-                   String accountType, LocalDateTime createdDate, String status,
-                   String currency, Users users, List<Card> cards) {
+    public AccountDTO(UUID id, String accountName, BigDecimal balance, String accountHolderFullName,
+                      String status, String accountType, LocalDateTime createdDate,
+                      String currency, List<Card> cards) {
         this.id = id;
         this.accountName = accountName;
-        this.accountHolderFullName = accountHolderFullName;
         this.balance = balance;
+        this.accountHolderFullName = accountHolderFullName;
+        this.status = status;
         this.accountType = accountType;
         this.createdDate = createdDate;
-        this.status = status;
         this.currency = currency;
-        this.users = users;
         this.cards = cards;
     }
 
@@ -62,20 +51,28 @@ public class Account {
         this.accountName = accountName;
     }
 
-    public String getAccountHolderFullName() {
-        return accountHolderFullName;
-    }
-
-    public void setAccountHolderFullName(String accountHolderName) {
-        this.accountHolderFullName = accountHolderName;
-    }
-
     public BigDecimal getBalance() {
         return balance;
     }
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public String getAccountHolderFullName() {
+        return accountHolderFullName;
+    }
+
+    public void setAccountHolderFullName(String accountHolderFullName) {
+        this.accountHolderFullName = accountHolderFullName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getAccountType() {
@@ -94,28 +91,12 @@ public class Account {
         this.createdDate = createdDate;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getCurrency() {
         return currency;
     }
 
     public void setCurrency(String currency) {
         this.currency = currency;
-    }
-
-    public Users getUser() {
-        return users;
-    }
-
-    public void setUser(Users users) {
-        this.users = users;
     }
 
     public List<Card> getCards() {
@@ -125,4 +106,6 @@ public class Account {
     public void setCards(List<Card> cards) {
         this.cards = cards;
     }
+
+
 }

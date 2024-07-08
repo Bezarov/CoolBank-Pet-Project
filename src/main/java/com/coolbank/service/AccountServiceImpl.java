@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -99,7 +100,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Double getBalanceByAccountId(UUID accountId) {
+    public BigDecimal getBalanceByAccountId(UUID accountId) {
         return accountRepository.findById(accountId)
                 .map(Account::getBalance)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -147,7 +148,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO updateAccountBalanceById(UUID accountId, Double balance) {
+    public AccountDTO updateAccountBalanceById(UUID accountId, BigDecimal balance) {
         return accountRepository.findById(accountId)
                 .map(EntityAccount -> {
                     EntityAccount.setBalance(balance);
@@ -159,7 +160,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO updateAccountBalanceByAccountName(String accountName, Double balance) {
+    public AccountDTO updateAccountBalanceByAccountName(String accountName, BigDecimal balance) {
         return accountRepository.findByAccountName(accountName)
                 .map(EntityAccount -> {
                     EntityAccount.setBalance(balance);

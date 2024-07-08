@@ -3,6 +3,7 @@ package com.coolbank.service;
 import com.coolbank.dto.AccountDTO;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public interface AccountService {
 
     AccountDTO getAccountByHolderFullName(String accountHolderFullName);
 
-    Double getBalanceByAccountId(UUID accountId);
+    BigDecimal getBalanceByAccountId(UUID accountId);
 
     List<AccountDTO> getAccountsByStatus(UUID userId, String accountStatus);
 
@@ -25,9 +26,9 @@ public interface AccountService {
 
     AccountDTO updateAccountStatusById(UUID accountId, String status);
 
-    AccountDTO updateAccountBalanceById(UUID accountId, Double balance);
+    AccountDTO updateAccountBalanceById(UUID accountId, BigDecimal balance);
 
-    AccountDTO updateAccountBalanceByAccountName(String accountName, Double balance);
+    AccountDTO updateAccountBalanceByAccountName(String accountName, BigDecimal balance);
 
     void deleteAccountByAccountId(UUID accountId);
 
