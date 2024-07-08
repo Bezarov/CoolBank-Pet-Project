@@ -1,12 +1,13 @@
 package com.coolbank.service;
 
 import com.coolbank.dto.CardDTO;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface CardService {
-    CardDTO createCard(UUID accountId, CardDTO cardDTO);
+    ResponseEntity<String> createCard(UUID accountId, String cardHolderFullName);
 
     CardDTO getCardById(UUID cardId);
 
@@ -18,12 +19,12 @@ public interface CardService {
     List<CardDTO> getAllUserCardsByCardHolderId(UUID holderId);
 
     List<CardDTO> getAllUserCardsByStatus(UUID holderId, String status);
-    List<CardDTO> getAllExpiredCard(UUID holderID);
-    List<CardDTO> getAllNotExpiredCard(UUID holderID);
+    List<CardDTO> getAllExpiredCard(UUID holderId);
+    List<CardDTO> getAllNotExpiredCard(UUID holderId);
 
     void deleteCardById(UUID cardId);
 
     void deleteAllAccountCardsByAccountId(UUID accountId);
 
-    void deleteAllUsersCardsByUserId(UUID userId);
+    void deleteAllUsersCardsByCardHolderUUID(UUID cardHolderUUID);
 }

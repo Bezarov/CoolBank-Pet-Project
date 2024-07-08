@@ -2,6 +2,7 @@ package com.coolbank.model;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -10,7 +11,7 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private Double amount;
+    private BigDecimal amount;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_account_id")
     private Account fromAccount;
@@ -26,7 +27,7 @@ public class Payment {
     public Payment() {
     }
 
-    public Payment(UUID id, Double amount, LocalDateTime paymentDate,
+    public Payment(UUID id, BigDecimal amount, LocalDateTime paymentDate,
                    String paymentType, String status, Account fromAccount,
                    Account toAccount, String description) {
         this.id = id;
@@ -47,11 +48,11 @@ public class Payment {
         this.id = id;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

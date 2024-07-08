@@ -1,13 +1,14 @@
 package com.coolbank.service;
 
 import com.coolbank.dto.PaymentDTO;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 public interface PaymentService {
-    PaymentDTO createPayment(PaymentDTO paymentDTO);
+    ResponseEntity<String> createPayment(PaymentDTO paymentDTO);
 
     PaymentDTO getPaymentById(UUID paymentId);
 
@@ -20,6 +21,10 @@ public interface PaymentService {
     List<PaymentDTO> getAllAccountPaymentsByPaymentType(UUID fromAccountId,
                                                         String paymentType);
 
-    List<PaymentDTO> getAllAccountPaymentsByPaymentDateRange(
-            LocalDateTime fromLocalDateTime, LocalDateTime toLocalDateTime);
+    List<PaymentDTO> getAllFromAccountPaymentsByPaymentDateRange(UUID fromAccountId,
+                                                                 LocalDateTime fromLocalDateTime,
+                                                                 LocalDateTime toLocalDateTime);
+    List<PaymentDTO> getAllFromToPaymentsByPaymentDateRange(UUID toAccountId,
+                                                            LocalDateTime fromLocalDateTime,
+                                                            LocalDateTime toLocalDateTime);
 }
