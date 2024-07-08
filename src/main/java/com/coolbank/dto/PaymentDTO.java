@@ -1,6 +1,5 @@
 package com.coolbank.dto;
 
-import com.coolbank.model.Account;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -9,8 +8,8 @@ import java.util.UUID;
 public class PaymentDTO {
     private UUID id;
     private BigDecimal amount;
-    private Account fromAccount;
-    private Account toAccount;
+    private UUID fromAccount;
+    private UUID toAccount;
     private LocalDateTime paymentDate;
     private String status;
     private String paymentType;
@@ -20,7 +19,7 @@ public class PaymentDTO {
     public PaymentDTO() {
     }
 
-    public PaymentDTO(UUID id, BigDecimal amount, Account fromAccount, Account toAccount, LocalDateTime paymentDate,
+    public PaymentDTO(UUID id, BigDecimal amount, UUID fromAccount, UUID toAccount, LocalDateTime paymentDate,
                       String status, String paymentType, String description) {
         this.id = id;
         this.amount = amount;
@@ -48,19 +47,19 @@ public class PaymentDTO {
         this.amount = amount;
     }
 
-    public Account getFromAccount() {
+    public UUID getFromAccount() {
         return fromAccount;
     }
 
-    public void setFromAccount(Account fromAccount) {
+    public void setFromAccount(UUID fromAccount) {
         this.fromAccount = fromAccount;
     }
 
-    public Account getToAccount() {
+    public UUID getToAccount() {
         return toAccount;
     }
 
-    public void setToAccount(Account toAccount) {
+    public void setToAccount(UUID toAccount) {
         this.toAccount = toAccount;
     }
 
