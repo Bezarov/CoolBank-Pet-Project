@@ -1,6 +1,8 @@
 package com.coolbank.service;
 
 import com.coolbank.dto.PaymentDTO;
+import com.coolbank.model.Account;
+import com.coolbank.model.Card;
 import com.coolbank.model.Payment;
 import com.coolbank.repository.AccountRepository;
 import com.coolbank.repository.CardRepository;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -20,11 +23,14 @@ import java.util.stream.Collectors;
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final AccountRepository accountRepository;
+    private final CardRepository cardRepository;
 
     @Autowired
-    public PaymentServiceImpl(PaymentRepository paymentRepository, AccountRepository accountRepository) {
+    public PaymentServiceImpl(PaymentRepository paymentRepository, AccountRepository accountRepository,
+                              CardRepository cardRepository) {
         this.paymentRepository = paymentRepository;
         this.accountRepository = accountRepository;
+        this.cardRepository = cardRepository;
     }
 
     private PaymentDTO convertPaymentModelToDTO(Payment payment) {
@@ -54,9 +60,36 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public ResponseEntity<String> createPayment(PaymentDTO paymentDTO) {
+    public ResponseEntity<String> createPaymentFromAccountIdToAccountId(PaymentDTO paymentDTO) {
         paymentRepository.save(convertPaymentDTOToModel(paymentDTO));
         return new ResponseEntity<>("Payment Successful", HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<String> createPaymentFromCardNumberToCardNumber(String fromCardNumber,
+                                                                          String toCardNumber,
+                                                                          BigDecimal amount) {
+        UUID fromAccountId = cardRepository.findByCardNumber(fromCardNumber)
+                .map(Card::getAccount)
+                .map(Account::getId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Linked Account to this Card Number: " + fromCardNumber + " was NOT Found"));
+        UUID toAccountId = cardRepository.findByCardNumber(toCardNumber)
+                .map(Card::getAccount)
+                .map(Account::getId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Linked Account to this Card Number: " + toCardNumber + " was NOT Found"));
+
+        PaymentDTO paymentDTO = new PaymentDTO();
+        paymentDTO.setAmount(amount);
+        paymentDTO.setFromAccount(fromAccountId);
+        paymentDTO.setToAccount(toAccountId);
+        paymentDTO.setPaymentDate(LocalDateTime.now());
+        paymentDTO.setStatus("COMPLETED");
+        paymentDTO.setPaymentType("TRANSFER");
+        paymentDTO.setDescription("Card transfer to: " + toCardNumber);
+        paymentRepository.save(convertPaymentDTOToModel(paymentDTO));
+        return new ResponseEntity<>("Transfer Successful", HttpStatus.CREATED);
     }
 
     @Override
