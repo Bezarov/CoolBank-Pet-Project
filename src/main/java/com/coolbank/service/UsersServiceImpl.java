@@ -5,6 +5,7 @@ import com.coolbank.model.Users;
 import com.coolbank.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,7 +27,8 @@ public class UsersServiceImpl implements UsersService {
         usersDTO.setId(user.getId());
         usersDTO.setFullName(user.getFullName());
         usersDTO.setEmail(user.getEmail());
-        usersDTO.setPhoneNumber(user.getEmail());
+        usersDTO.setPhoneNumber(user.getPhoneNumber());
+        usersDTO.setPassword(user.getPassword());
         return usersDTO;
     }
 
@@ -43,12 +45,14 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public Users createUser(UsersDTO usersDTO) {
+    public ResponseEntity<String> createUser(UsersDTO usersDTO) {
         usersRepository.findByEmail(usersDTO.getEmail())
-                .ifPresent(EntityUser -> {throw new ResponseStatusException(
+                .ifPresent(EntityUser -> {
+                    throw new ResponseStatusException(
                             HttpStatus.FOUND, "User with such Email ALREADY EXIST: " + usersDTO.getEmail());
                 });
-        return usersRepository.save(convertUsersDTOToModel(usersDTO));
+        usersRepository.save(convertUsersDTOToModel(usersDTO));
+        return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
     }
 
     @Override
