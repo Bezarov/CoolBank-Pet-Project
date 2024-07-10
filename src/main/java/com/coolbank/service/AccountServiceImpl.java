@@ -4,6 +4,7 @@ import com.coolbank.dto.AccountDTO;
 import com.coolbank.model.Account;
 import com.coolbank.repository.AccountRepository;
 import com.coolbank.repository.UsersRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -171,6 +172,7 @@ public class AccountServiceImpl implements AccountService {
                         "Account with such Account Name was NOT Found" + accountName));
     }
 
+    @Transactional
     @Override
     public void deleteAccountByAccountId(UUID accountId) {
         accountRepository.findById(accountId)
@@ -179,6 +181,7 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.deleteById(accountId);
     }
 
+    @Transactional
     @Override
     public void deleteAccountByAccountName(String accountName) {
         accountRepository.findByAccountName(accountName)
@@ -187,6 +190,7 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.deleteByAccountName(accountName);
     }
 
+    @Transactional
     @Override
     public void deleteAllUserAccountsByUserId(UUID userId) {
         usersRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(

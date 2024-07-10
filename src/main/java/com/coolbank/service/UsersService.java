@@ -1,12 +1,12 @@
 package com.coolbank.service;
 
 import com.coolbank.dto.UsersDTO;
-import com.coolbank.model.Users;
+import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
 
 public interface UsersService {
-    Users createUser(UsersDTO usersDTO);
+    ResponseEntity<String> createUser(UsersDTO usersDTO);
 
     UsersDTO getUserById(UUID userId);
 
