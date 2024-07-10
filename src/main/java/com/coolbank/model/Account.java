@@ -1,6 +1,7 @@
 package com.coolbank.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -26,6 +27,7 @@ public class Account {
     private Users users;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Card> cards;
 
     public Account() {
