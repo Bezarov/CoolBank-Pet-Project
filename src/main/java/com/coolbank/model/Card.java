@@ -1,6 +1,7 @@
 package com.coolbank.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -16,8 +17,9 @@ public class Card {
     private UUID cardHolderUUID;
     private LocalDate expirationDate;
     private String cvv;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
+    @JsonBackReference
     private Account account;
     private String status;
 

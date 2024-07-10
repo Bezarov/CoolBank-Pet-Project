@@ -20,13 +20,15 @@ public interface AccountService {
 
     BigDecimal getBalanceByAccountId(UUID accountId);
 
-    List<AccountDTO> getAccountsByStatus(UUID userId, String accountStatus);
+    List<AccountDTO> getAllAccountsByStatus(UUID userId, String accountStatus);
+
+    AccountDTO refillAccount(UUID accountId, BigDecimal amount);
 
     AccountDTO updateAccountById(UUID accountId, AccountDTO accountDTO);
 
     AccountDTO updateAccountStatusById(UUID accountId, String status);
 
-    AccountDTO updateAccountBalanceById(UUID accountId, BigDecimal balance);
+    AccountDTO updateAccountBalanceById(UUID accountId, BigDecimal newBalance);
 
     AccountDTO updateAccountBalanceByAccountName(String accountName, BigDecimal balance);
 

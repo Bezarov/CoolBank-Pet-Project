@@ -133,6 +133,7 @@ public class UsersServiceImpl implements UsersService {
                         HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userEmail));
         usersRepository.deleteByEmail(userEmail);
     }
+
     @Transactional
     @Override
     public void deleteUserByFullName(String userFullName) {

@@ -7,7 +7,6 @@ import com.coolbank.repository.UsersRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -31,11 +30,13 @@ public class AccountServiceImpl implements AccountService {
 
     private AccountDTO convertAccountModelToDTO(Account account) {
         AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setId(account.getId());
         accountDTO.setAccountName(account.getAccountName());
         accountDTO.setAccountHolderFullName(account.getAccountHolderFullName());
         accountDTO.setAccountType(account.getAccountType());
         accountDTO.setCreatedDate(account.getCreatedDate());
         accountDTO.setBalance(account.getBalance());
+        accountDTO.setCurrency(account.getCurrency());
         accountDTO.setCards(account.getCards());
         accountDTO.setStatus(account.getStatus());
         return accountDTO;
@@ -96,8 +97,7 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findByAccountHolderFullName(accountHolderFullName)
                 .map(this::convertAccountModelToDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Account with such Holder Full Name was NOT Found" + accountHolderFullName
-                ));
+                        "Account with such Holder Full Name was NOT Found" + accountHolderFullName));
     }
 
     @Override
@@ -109,7 +109,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<AccountDTO> getAccountsByStatus(UUID userId, String accountStatus) {
+    public List<AccountDTO> getAllAccountsByStatus(UUID userId, String accountStatus) {
         usersRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userId));
 
@@ -118,6 +118,18 @@ public class AccountServiceImpl implements AccountService {
                 .filter(account -> account.getStatus().equals(accountStatus))
                 .map(this::convertAccountModelToDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public AccountDTO refillAccount(UUID accountId, BigDecimal amount) {
+        return accountRepository.findById(accountId)
+                .map(EntityAccount -> {
+                    EntityAccount.setBalance(EntityAccount.getBalance().add(amount));
+                    accountRepository.save(EntityAccount);
+                    return convertAccountModelToDTO(EntityAccount);
+                })
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + accountId));
     }
 
     @Override
@@ -149,10 +161,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO updateAccountBalanceById(UUID accountId, BigDecimal balance) {
+    public AccountDTO updateAccountBalanceById(UUID accountId, BigDecimal newBalance) {
         return accountRepository.findById(accountId)
                 .map(EntityAccount -> {
-                    EntityAccount.setBalance(balance);
+                    EntityAccount.setBalance(newBalance);
                     accountRepository.save(EntityAccount);
                     return convertAccountModelToDTO(EntityAccount);
                 })
