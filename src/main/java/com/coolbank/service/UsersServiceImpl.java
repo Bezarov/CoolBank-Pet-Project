@@ -3,6 +3,7 @@ package com.coolbank.service;
 import com.coolbank.dto.UsersDTO;
 import com.coolbank.model.Users;
 import com.coolbank.repository.UsersRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -115,6 +116,7 @@ public class UsersServiceImpl implements UsersService {
                         HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userId));
     }
 
+    @Transactional
     @Override
     public void deleteUserById(UUID userId) {
         usersRepository.findById(userId)
@@ -123,6 +125,7 @@ public class UsersServiceImpl implements UsersService {
         usersRepository.deleteById(userId);
     }
 
+    @Transactional
     @Override
     public void deleteUserByEmail(String userEmail) {
         usersRepository.findByEmail(userEmail)
@@ -130,7 +133,7 @@ public class UsersServiceImpl implements UsersService {
                         HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userEmail));
         usersRepository.deleteByEmail(userEmail);
     }
-
+    @Transactional
     @Override
     public void deleteUserByFullName(String userFullName) {
         usersRepository.findByFullName(userFullName)

@@ -5,6 +5,7 @@ import com.coolbank.model.Card;
 import com.coolbank.repository.AccountRepository;
 import com.coolbank.repository.CardRepository;
 import com.coolbank.repository.UsersRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -152,6 +153,7 @@ public class CardServiceImpl implements CardService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public void deleteCardById(UUID cardId) {
         cardRepository.findById(cardId).orElseThrow(() -> new ResponseStatusException(
@@ -159,6 +161,7 @@ public class CardServiceImpl implements CardService {
         cardRepository.deleteById(cardId);
     }
 
+    @Transactional
     @Override
     public void deleteAllAccountCardsByAccountId(UUID accountId) {
         accountRepository.findById(accountId).orElseThrow(() -> new ResponseStatusException(
@@ -166,6 +169,7 @@ public class CardServiceImpl implements CardService {
         cardRepository.deleteAllByAccountId(accountId);
     }
 
+    @Transactional
     @Override
     public void deleteAllUsersCardsByCardHolderUUID(UUID cardHolderUUID) {
         usersRepository.findById(cardHolderUUID).orElseThrow(() -> new ResponseStatusException(
