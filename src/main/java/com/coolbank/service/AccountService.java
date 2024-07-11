@@ -16,7 +16,7 @@ public interface AccountService {
 
     List<AccountDTO> getAllUserAccountsByUserId(UUID userId);
 
-    AccountDTO getAccountByHolderFullName(String accountHolderFullName);
+    List<AccountDTO> getAllAccountByHolderFullName(String accountHolderFullName);
 
     BigDecimal getBalanceByAccountId(UUID accountId);
 
@@ -32,10 +32,10 @@ public interface AccountService {
 
     AccountDTO updateAccountBalanceByAccountName(String accountName, BigDecimal balance);
 
-    void deleteAccountByAccountId(UUID accountId);
+    ResponseEntity<String> deleteAccountByAccountId(UUID accountId);
 
-    void deleteAccountByAccountName(String accountName);
+    ResponseEntity<String> deleteAccountByAccountName(String accountName);
 
-    void deleteAllUserAccountsByUserId(UUID userId);
+    ResponseEntity<String> deleteAllUserAccountsByUserId(UUID userId);
 
 }

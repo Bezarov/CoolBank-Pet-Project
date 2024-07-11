@@ -118,28 +118,31 @@ public class UsersServiceImpl implements UsersService {
 
     @Transactional
     @Override
-    public void deleteUserById(UUID userId) {
+    public ResponseEntity<String> deleteUserById(UUID userId) {
         usersRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userId));
         usersRepository.deleteById(userId);
+        return new ResponseEntity<>("User deleted successfully", HttpStatus.ACCEPTED);
     }
 
     @Transactional
     @Override
-    public void deleteUserByEmail(String userEmail) {
+    public ResponseEntity<String> deleteUserByEmail(String userEmail) {
         usersRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userEmail));
         usersRepository.deleteByEmail(userEmail);
+        return new ResponseEntity<>("User deleted successfully", HttpStatus.ACCEPTED);
     }
 
     @Transactional
     @Override
-    public void deleteUserByFullName(String userFullName) {
+    public ResponseEntity<String> deleteUserByFullName(String userFullName) {
         usersRepository.findByFullName(userFullName)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userFullName));
         usersRepository.deleteByFullName(userFullName);
+        return new ResponseEntity<>("User deleted successfully", HttpStatus.ACCEPTED);
     }
 }

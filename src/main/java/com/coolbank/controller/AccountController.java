@@ -28,9 +28,10 @@ public class AccountController {
         return accountService.getAccountById(accountId);
     }
 
+
     @GetMapping("/username/{accountHolderFullName}")
-    public AccountDTO getAccountByHolderFullName(@PathVariable String accountHolderFullName) {
-        return accountService.getAccountByHolderFullName(accountHolderFullName);
+    public ResponseEntity<List<AccountDTO>> getAllAccountByHolderFullName(@PathVariable String accountHolderFullName) {
+        return ResponseEntity.ok(accountService.getAllAccountByHolderFullName(accountHolderFullName));
     }
 
     @GetMapping("/balance/{accountId}")
@@ -43,7 +44,7 @@ public class AccountController {
         return accountService.getAccountByAccountName(accountName);
     }
 
-    @GetMapping("/userid/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<AccountDTO>> getAllUserAccountsByUserId(@PathVariable UUID userId) {
         return ResponseEntity.ok(accountService.getAllUserAccountsByUserId(userId));
     }
@@ -64,12 +65,12 @@ public class AccountController {
         return accountService.updateAccountById(accountId, accountDTO);
     }
 
-    @PatchMapping("/update/{accountId}/{status}")
+    @PatchMapping("/update/{accountId}/status/{status}")
     public AccountDTO updateAccountStatusById(@PathVariable UUID accountId, @PathVariable String status) {
         return accountService.updateAccountStatusById(accountId, status);
     }
 
-    @PatchMapping("/update/{accountId}/{newBalance}")
+    @PatchMapping("/update/{accountId}/balance/{newBalance}")
     public AccountDTO updateAccountBalanceById(@PathVariable UUID accountId, @PathVariable BigDecimal newBalance) {
         return accountService.updateAccountBalanceById(accountId, newBalance);
     }
@@ -81,17 +82,17 @@ public class AccountController {
     }
 
     @DeleteMapping("/delete/id/{accountId}")
-    public void deleteAccountByAccountId(@PathVariable UUID accountId) {
-        accountService.deleteAccountByAccountId(accountId);
+    public ResponseEntity<String> deleteAccountByAccountId(@PathVariable UUID accountId) {
+        return accountService.deleteAccountByAccountId(accountId);
     }
 
     @DeleteMapping("/delete/name/{accountName}")
-    public void deleteAccountByAccountName(@PathVariable String accountName) {
-        accountService.deleteAccountByAccountName(accountName);
+    public ResponseEntity<String> deleteAccountByAccountName(@PathVariable String accountName) {
+        return accountService.deleteAccountByAccountName(accountName);
     }
 
     @DeleteMapping("/delete/user/{userId}")
-    public void deleteAllUserAccountsByUserId(@PathVariable UUID userId) {
-        accountService.deleteAllUserAccountsByUserId(userId);
+    public ResponseEntity<String> deleteAllUserAccountsByUserId(@PathVariable UUID userId) {
+        return accountService.deleteAllUserAccountsByUserId(userId);
     }
 }
