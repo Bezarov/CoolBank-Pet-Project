@@ -3,6 +3,7 @@ package com.coolbank.service;
 import com.coolbank.dto.AccountDTO;
 import com.coolbank.model.Account;
 import com.coolbank.repository.AccountRepository;
+import com.coolbank.repository.CardRepository;
 import com.coolbank.repository.UsersRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,14 @@ import java.util.stream.Collectors;
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final UsersRepository usersRepository;
+    private final CardRepository cardRepository;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, UsersRepository usersRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository,
+                              UsersRepository usersRepository, CardRepository cardRepository) {
         this.accountRepository = accountRepository;
         this.usersRepository = usersRepository;
+        this.cardRepository = cardRepository;
     }
 
     private AccountDTO convertAccountModelToDTO(Account account) {
@@ -93,11 +97,14 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO getAccountByHolderFullName(String accountHolderFullName) {
-        return accountRepository.findByAccountHolderFullName(accountHolderFullName)
+    public List<AccountDTO> getAllAccountByHolderFullName(String accountHolderFullName) {
+        usersRepository.findByFullName(accountHolderFullName).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "User with such Full Name was NOT Found" + accountHolderFullName));
+
+        List<Account> accounts = accountRepository.findByAccountHolderFullName(accountHolderFullName);
+        return accounts.stream()
                 .map(this::convertAccountModelToDTO)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Account with such Holder Full Name was NOT Found" + accountHolderFullName));
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -186,28 +193,53 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public void deleteAccountByAccountId(UUID accountId) {
+    public ResponseEntity<String> deleteAccountByAccountId(UUID accountId) {
         accountRepository.findById(accountId)
+                .map(EntityAccount -> {
+                    EntityAccount.setStatus("PRE-REMOVED");
+                    return accountRepository.save(EntityAccount);
+                })
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + accountId));
-        accountRepository.deleteById(accountId);
+        cardRepository.findAllByAccountId(accountId).forEach(EntityCard -> {
+            EntityCard.setStatus("DEACTIVATED");
+            cardRepository.save(EntityCard);
+        });
+        return new ResponseEntity<>("Account deleted successfully", HttpStatus.ACCEPTED);
     }
 
     @Transactional
     @Override
-    public void deleteAccountByAccountName(String accountName) {
+    public ResponseEntity<String> deleteAccountByAccountName(String accountName) {
         accountRepository.findByAccountName(accountName)
+                .map(EntityAccount -> {
+                    EntityAccount.setStatus("PRE-REMOVED");
+                    return accountRepository.save(EntityAccount);
+                })
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + accountName));
-        accountRepository.deleteByAccountName(accountName);
+                        HttpStatus.NOT_FOUND, "Account with such Account Name was NOT Found" + accountName));
+        cardRepository.findAllByAccountId(accountRepository.findByAccountName(accountName).get().getId())
+                .forEach(EntityCard -> {
+                    EntityCard.setStatus("DEACTIVATED");
+                    cardRepository.save(EntityCard);
+                });
+        return new ResponseEntity<>("Account deleted successfully", HttpStatus.ACCEPTED);
     }
 
     @Transactional
     @Override
-    public void deleteAllUserAccountsByUserId(UUID userId) {
+    public ResponseEntity<String> deleteAllUserAccountsByUserId(UUID userId) {
         usersRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userId));
 
-        accountRepository.deleteAllByUsersId(userId);
+        accountRepository.findAllByUsersId(userId).forEach(EntityAccount -> {
+            EntityAccount.setStatus("PRE-REMOVED");
+            cardRepository.findAllByAccountId(EntityAccount.getId()).forEach(EntityCard -> {
+                EntityCard.setStatus("DEACTIVATED");
+                cardRepository.save(EntityCard);
+            });
+            accountRepository.save(EntityAccount);
+        });
+        return new ResponseEntity<>("Accounts deleted successfully", HttpStatus.ACCEPTED);
     }
 }

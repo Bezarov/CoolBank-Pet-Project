@@ -20,9 +20,9 @@ public interface UsersService {
 
     UsersDTO updatePasswordById(UUID userId, String newPassword);
 
-    void deleteUserById(UUID userId);
+    ResponseEntity<String> deleteUserById(UUID userId);
 
-    void deleteUserByEmail(String userEmail);
+    ResponseEntity<String> deleteUserByEmail(String userEmail);
 
-    void deleteUserByFullName(String userFullName);
+    ResponseEntity<String> deleteUserByFullName(String userFullName);
 }
