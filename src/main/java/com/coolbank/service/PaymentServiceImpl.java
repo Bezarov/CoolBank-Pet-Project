@@ -41,6 +41,7 @@ public class PaymentServiceImpl implements PaymentService {
         paymentDTO.setAmount(payment.getAmount());
         paymentDTO.setStatus(payment.getStatus());
         paymentDTO.setPaymentType(payment.getPaymentType());
+        paymentDTO.setDescription(payment.getDescription());
         return paymentDTO;
     }
 
@@ -48,10 +49,10 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = new Payment();
         payment.setFromAccount(accountRepository.findById(paymentDTO.getFromAccount())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "From Account with ID " + paymentDTO.getFromAccount() + " was NOT Found")));
+                        "From Account ID " + paymentDTO.getFromAccount() + " was NOT Found")));
         payment.setToAccount(accountRepository.findById(paymentDTO.getToAccount())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "To Account with ID " + paymentDTO.getToAccount() + " was NOT Found")));
+                        "To Account ID " + paymentDTO.getToAccount() + " was NOT Found")));
         payment.setPaymentDate(LocalDateTime.now());
         payment.setAmount(paymentDTO.getAmount());
         payment.setDescription(paymentDTO.getDescription());
@@ -97,13 +98,13 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentRepository.findById(paymentId)
                 .map(this::convertPaymentModelToDTO)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Payment with such ID was NOT Found" + paymentId));
+                        HttpStatus.NOT_FOUND, "Payment with such ID was NOT Found " + paymentId));
     }
 
     @Override
     public List<PaymentDTO> getPaymentsByStatus(UUID fromAccountId, String status) {
         accountRepository.findById(fromAccountId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + fromAccountId));
+                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + fromAccountId));
         List<Payment> payments = paymentRepository.findAllByFromAccountId(fromAccountId);
         return payments.stream()
                 .filter(payment -> payment.getStatus().equals(status))
@@ -114,7 +115,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public List<PaymentDTO> getAllAccountPaymentsByFromAccount(UUID fromAccountId) {
         accountRepository.findById(fromAccountId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + fromAccountId));
+                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + fromAccountId));
         List<Payment> payments = paymentRepository.findAllByFromAccountId(fromAccountId);
         return payments.stream()
                 .map(this::convertPaymentModelToDTO)
@@ -124,7 +125,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public List<PaymentDTO> getAllAccountPaymentsByToAccount(UUID toAccountId) {
         accountRepository.findById(toAccountId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + toAccountId));
+                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + toAccountId));
         List<Payment> payments = paymentRepository.findAllByToAccountId(toAccountId);
         return payments.stream()
                 .map(this::convertPaymentModelToDTO)
@@ -134,7 +135,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public List<PaymentDTO> getAllAccountPaymentsByPaymentType(UUID fromAccountId, String paymentType) {
         accountRepository.findById(fromAccountId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + fromAccountId));
+                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + fromAccountId));
         List<Payment> payments = paymentRepository.findAllByPaymentType(paymentType);
         return payments.stream()
                 .map(this::convertPaymentModelToDTO)
@@ -146,7 +147,7 @@ public class PaymentServiceImpl implements PaymentService {
                                                                         LocalDateTime fromLocalDateTime,
                                                                         LocalDateTime toLocalDateTime) {
         accountRepository.findById(fromAccountId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + fromAccountId));
+                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + fromAccountId));
         List<Payment> payments = paymentRepository.findAllByFromAccountIdAndPaymentDateBetween(
                 fromAccountId, fromLocalDateTime, toLocalDateTime);
         return payments.stream()
@@ -159,7 +160,7 @@ public class PaymentServiceImpl implements PaymentService {
                                                                    LocalDateTime fromLocalDateTime,
                                                                    LocalDateTime toLocalDateTime) {
         accountRepository.findById(toAccountId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + toAccountId));
+                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + toAccountId));
         List<Payment> payments = paymentRepository.findAllByFromAccountIdAndPaymentDateBetween(
                 toAccountId, fromLocalDateTime, toLocalDateTime);
         return payments.stream()

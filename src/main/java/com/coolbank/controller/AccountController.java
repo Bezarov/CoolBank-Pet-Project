@@ -24,8 +24,9 @@ public class AccountController {
     }
 
     @GetMapping("/id/{accountId}")
-    public AccountDTO getAccountById(@PathVariable UUID accountId) {
-        return accountService.getAccountById(accountId);
+    public ResponseEntity<AccountDTO> getAccountById(@PathVariable UUID accountId) {
+        AccountDTO accountDTO = accountService.getAccountById(accountId);
+        return ResponseEntity.ok(accountDTO);
     }
 
 
@@ -35,50 +36,62 @@ public class AccountController {
     }
 
     @GetMapping("/balance/{accountId}")
-    public BigDecimal getBalanceByAccountId(@PathVariable UUID accountId) {
-        return accountService.getBalanceByAccountId(accountId);
+    public ResponseEntity<BigDecimal> getBalanceByAccountId(@PathVariable UUID accountId) {
+        BigDecimal bigDecimal = accountService.getBalanceByAccountId(accountId);
+        return ResponseEntity.ok(bigDecimal);
     }
 
     @GetMapping("/name/{accountName}")
-    public AccountDTO getAccountByAccountName(@PathVariable String accountName) {
-        return accountService.getAccountByAccountName(accountName);
+    public ResponseEntity<AccountDTO> getAccountByAccountName(@PathVariable String accountName) {
+        AccountDTO accountDTO = accountService.getAccountByAccountName(accountName);
+        return ResponseEntity.ok(accountDTO);
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<AccountDTO>> getAllUserAccountsByUserId(@PathVariable UUID userId) {
-        return ResponseEntity.ok(accountService.getAllUserAccountsByUserId(userId));
+        List<AccountDTO> accountDTOS = accountService.getAllUserAccountsByUserId(userId);
+        return ResponseEntity.ok(accountDTOS);
     }
 
     @GetMapping("/user/{userId}/status/{accountStatus}")
     public ResponseEntity<List<AccountDTO>> getAccountsByStatus(@PathVariable UUID userId,
                                                                 @PathVariable String accountStatus) {
-        return ResponseEntity.ok(accountService.getAllAccountsByStatus(userId, accountStatus));
+        List<AccountDTO> accountDTOS = accountService.getAllAccountsByStatus(userId, accountStatus);
+        return ResponseEntity.ok(accountDTOS);
     }
 
     @PatchMapping("/refill/{accountId}/{amount}")
-    public AccountDTO refillAccount(@PathVariable UUID accountId, @PathVariable BigDecimal amount) {
-        return accountService.refillAccount(accountId, amount);
+    public ResponseEntity<AccountDTO> refillAccount(@PathVariable UUID accountId, @PathVariable BigDecimal amount) {
+        AccountDTO accountDTO = accountService.refillAccount(accountId, amount);
+        return ResponseEntity.ok(accountDTO);
     }
 
     @PutMapping("/update/{accountId}")
-    public AccountDTO updateAccountById(@PathVariable UUID accountId, @RequestBody AccountDTO accountDTO) {
-        return accountService.updateAccountById(accountId, accountDTO);
+    public ResponseEntity<AccountDTO> updateAccountById(@PathVariable UUID accountId,
+                                                        @RequestBody AccountDTO accountDTO) {
+        AccountDTO ResponseAccountDTO = accountService.updateAccountById(accountId, accountDTO);
+        return ResponseEntity.ok(ResponseAccountDTO);
     }
 
     @PatchMapping("/update/{accountId}/status/{status}")
-    public AccountDTO updateAccountStatusById(@PathVariable UUID accountId, @PathVariable String status) {
-        return accountService.updateAccountStatusById(accountId, status);
+    public ResponseEntity<AccountDTO> updateAccountStatusById(@PathVariable UUID accountId,
+                                                              @PathVariable String status) {
+        AccountDTO accountDTO = accountService.updateAccountStatusById(accountId, status);
+        return ResponseEntity.ok(accountDTO);
     }
 
     @PatchMapping("/update/{accountId}/balance/{newBalance}")
-    public AccountDTO updateAccountBalanceById(@PathVariable UUID accountId, @PathVariable BigDecimal newBalance) {
-        return accountService.updateAccountBalanceById(accountId, newBalance);
+    public ResponseEntity<AccountDTO> updateAccountBalanceById(@PathVariable UUID accountId,
+                                                               @PathVariable BigDecimal newBalance) {
+        AccountDTO accountDTO = accountService.updateAccountBalanceById(accountId, newBalance);
+        return ResponseEntity.ok(accountDTO);
     }
 
     @PatchMapping("/update/{accountName}/{balance}")
-    public AccountDTO updateAccountBalanceByAccountName(@PathVariable String accountName,
-                                                        @PathVariable BigDecimal balance) {
-        return accountService.updateAccountBalanceByAccountName(accountName, balance);
+    public ResponseEntity<AccountDTO> updateAccountBalanceByAccountName(@PathVariable String accountName,
+                                                                        @PathVariable BigDecimal balance) {
+        AccountDTO accountDTO = accountService.updateAccountBalanceByAccountName(accountName, balance);
+        return ResponseEntity.ok(accountDTO);
     }
 
     @DeleteMapping("/delete/id/{accountId}")

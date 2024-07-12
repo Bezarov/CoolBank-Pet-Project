@@ -22,34 +22,40 @@ public class UsersController {
     }
 
     @GetMapping("/id/{userId}")
-    public UsersDTO getUserById(@PathVariable UUID userId) {
-        return usersService.getUserById(userId);
+    public ResponseEntity<UsersDTO> getUserById(@PathVariable UUID userId) {
+        UsersDTO usersDTO = usersService.getUserById(userId);
+        return ResponseEntity.ok(usersDTO);
     }
 
     @GetMapping("/email/{userEmail}")
-    public UsersDTO getUserByEmail(@PathVariable String userEmail) {
-        return usersService.getUserByEmail(userEmail);
+    public ResponseEntity<UsersDTO> getUserByEmail(@PathVariable String userEmail) {
+        UsersDTO usersDTO = usersService.getUserByEmail(userEmail);
+        return ResponseEntity.ok(usersDTO);
     }
 
     @GetMapping("/name/{userFullName}")
-    public UsersDTO getUserByFullName(@PathVariable String userFullName) {
-        return usersService.getUserByFullName(userFullName);
+    public ResponseEntity<UsersDTO> getUserByFullName(@PathVariable String userFullName) {
+        UsersDTO usersDTO = usersService.getUserByFullName(userFullName);
+        return ResponseEntity.ok(usersDTO);
     }
 
     @GetMapping("/phone/{userPhoneNumber}")
-    public UsersDTO getUserByPhoneNumber(@PathVariable String userPhoneNumber) {
-        return usersService.getUserByPhoneNumber(userPhoneNumber);
+    public ResponseEntity<UsersDTO> getUserByPhoneNumber(@PathVariable String userPhoneNumber) {
+        UsersDTO usersDTO = usersService.getUserByPhoneNumber(userPhoneNumber);
+        return ResponseEntity.ok(usersDTO);
     }
 
     @PutMapping("/update/")
-    public UsersDTO updateUser(@RequestBody UsersDTO usersDTO) {
-        return usersService.updateUser(usersDTO);
+    public ResponseEntity<UsersDTO> updateUser(@RequestBody UsersDTO usersDTO) {
+        UsersDTO ResponseUsersDTO = usersService.updateUser(usersDTO);
+        return ResponseEntity.ok(ResponseUsersDTO);
     }
 
     @PatchMapping("/update/{userId}/{newPassword}")
-    public UsersDTO updatePasswordById(@PathVariable UUID userId,
-                                       @PathVariable String newPassword) {
-        return usersService.updatePasswordById(userId, newPassword);
+    public ResponseEntity<UsersDTO> updatePasswordById(@PathVariable UUID userId,
+                                                       @PathVariable String newPassword) {
+        UsersDTO usersDTO = usersService.updatePasswordById(userId, newPassword);
+        return ResponseEntity.ok(usersDTO);
     }
 
     @DeleteMapping("/remove/id/{userId}")
