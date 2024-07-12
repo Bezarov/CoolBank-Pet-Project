@@ -7,14 +7,15 @@ import com.coolbank.model.Payment;
 import com.coolbank.repository.AccountRepository;
 import com.coolbank.repository.CardRepository;
 import com.coolbank.repository.PaymentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private PaymentDTO convertPaymentModelToDTO(Payment payment) {
         PaymentDTO paymentDTO = new PaymentDTO();
+        paymentDTO.setId(payment.getId());
         paymentDTO.setFromAccount(payment.getFromAccount().getId());
         paymentDTO.setToAccount(payment.getToAccount().getId());
         paymentDTO.setPaymentDate(payment.getPaymentDate());
@@ -53,44 +55,75 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setToAccount(accountRepository.findById(paymentDTO.getToAccount())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "To Account ID " + paymentDTO.getToAccount() + " was NOT Found")));
-        payment.setPaymentDate(LocalDateTime.now());
+        payment.setPaymentDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         payment.setAmount(paymentDTO.getAmount());
         payment.setDescription(paymentDTO.getDescription());
         payment.setPaymentType(paymentDTO.getPaymentType());
+        payment.setStatus("COMPLETED");
         return payment;
     }
 
     @Override
-    public ResponseEntity<String> createPaymentFromAccountIdToAccountId(PaymentDTO paymentDTO) {
-        paymentRepository.save(convertPaymentDTOToModel(paymentDTO));
-        return new ResponseEntity<>("Payment Successful", HttpStatus.CREATED);
+    @Transactional
+    public PaymentDTO createPaymentByAccounts(PaymentDTO paymentDTO) {
+        // Находим аккаунт, с которого будут списываться средства
+        Account accountFromAccount = accountRepository.findById(paymentDTO.getFromAccount())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "From Account ID " + paymentDTO.getFromAccount() + " was NOT Found"));
+        // Проверяем наличие на наличие достаточных средств
+        if (accountFromAccount.getBalance().compareTo(paymentDTO.getAmount()) < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "INSUFFICIENT FUNDS");
+        }
+        // Вычитаем сумму платежа из баланса аккаунта
+        accountFromAccount.setBalance(accountFromAccount.getBalance().subtract(paymentDTO.getAmount()));
+        accountRepository.save(accountFromAccount);
+
+        // Находим аккаунт, на который будут зачислены средства
+        Account accountToAccount = accountRepository.findById(paymentDTO.getToAccount())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "To Account ID " + paymentDTO.getToAccount() + " was NOT Found"));
+        // Зачисляем сумму платежа к балансу аккаунта
+        accountToAccount.setBalance(accountToAccount.getBalance().add(paymentDTO.getAmount()));
+        accountRepository.save(accountToAccount);
+
+        paymentDTO.setPaymentType("Account to Account Transfer");
+        Payment payment = paymentRepository.save(convertPaymentDTOToModel(paymentDTO));
+        return convertPaymentModelToDTO(payment);
     }
 
     @Override
-    public ResponseEntity<String> createPaymentFromCardNumberToCardNumber(String fromCardNumber,
-                                                                          String toCardNumber,
-                                                                          BigDecimal amount) {
-        UUID fromAccountId = cardRepository.findByCardNumber(fromCardNumber)
+    @Transactional
+    public PaymentDTO createPaymentByCards(String fromCardNumber, String toCardNumber, BigDecimal amount) {
+        // Находим аккаунт, с которого будут списываться средства
+        Account accountFromAccount = cardRepository.findByCardNumber(fromCardNumber)
                 .map(Card::getAccount)
-                .map(Account::getId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Linked Account to this Card Number: " + fromCardNumber + " was NOT Found"));
-        UUID toAccountId = cardRepository.findByCardNumber(toCardNumber)
+        // Проверяем наличие на наличие достаточных средств
+        if (accountFromAccount.getBalance().compareTo(amount) < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "INSUFFICIENT FUNDS");
+        }
+        // Вычитаем сумму платежа из баланса аккаунта
+        accountFromAccount.setBalance(accountFromAccount.getBalance().subtract(amount));
+        accountRepository.save(accountFromAccount);
+
+        // Находим аккаунт, на который будут зачислены средства
+        Account accountToAccount = cardRepository.findByCardNumber(toCardNumber)
                 .map(Card::getAccount)
-                .map(Account::getId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Linked Account to this Card Number: " + toCardNumber + " was NOT Found"));
+        // Зачисляем сумму платежа к балансу аккаунта
+        accountToAccount.setBalance(accountToAccount.getBalance().add(amount));
+        accountRepository.save(accountToAccount);
 
         PaymentDTO paymentDTO = new PaymentDTO();
+        paymentDTO.setFromAccount(accountFromAccount.getId());
+        paymentDTO.setToAccount(accountToAccount.getId());
         paymentDTO.setAmount(amount);
-        paymentDTO.setFromAccount(fromAccountId);
-        paymentDTO.setToAccount(toAccountId);
-        paymentDTO.setPaymentDate(LocalDateTime.now());
-        paymentDTO.setStatus("COMPLETED");
-        paymentDTO.setPaymentType("TRANSFER");
-        paymentDTO.setDescription("Card transfer to: " + toCardNumber);
-        paymentRepository.save(convertPaymentDTOToModel(paymentDTO));
-        return new ResponseEntity<>("Transfer Successful", HttpStatus.CREATED);
+        paymentDTO.setPaymentType("Card to Card Transfer");
+        paymentDTO.setDescription("From Card: " + fromCardNumber + " to Card: " + toCardNumber);
+        Payment payment = paymentRepository.save(convertPaymentDTOToModel(paymentDTO));
+        return convertPaymentModelToDTO(payment);
     }
 
     @Override
@@ -102,22 +135,22 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    public List<PaymentDTO> getAllAccountPaymentsByFromAccount(UUID fromAccountId) {
+        accountRepository.findById(fromAccountId).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + fromAccountId));
+        List<Payment> payments = paymentRepository.findAllByFromAccountId(fromAccountId);
+        return payments.stream()
+                .map(this::convertPaymentModelToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<PaymentDTO> getPaymentsByStatus(UUID fromAccountId, String status) {
         accountRepository.findById(fromAccountId).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + fromAccountId));
         List<Payment> payments = paymentRepository.findAllByFromAccountId(fromAccountId);
         return payments.stream()
                 .filter(payment -> payment.getStatus().equals(status))
-                .map(this::convertPaymentModelToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<PaymentDTO> getAllAccountPaymentsByFromAccount(UUID fromAccountId) {
-        accountRepository.findById(fromAccountId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + fromAccountId));
-        List<Payment> payments = paymentRepository.findAllByFromAccountId(fromAccountId);
-        return payments.stream()
                 .map(this::convertPaymentModelToDTO)
                 .collect(Collectors.toList());
     }
@@ -144,25 +177,25 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<PaymentDTO> getAllFromAccountPaymentsByPaymentDateRange(UUID fromAccountId,
-                                                                        LocalDateTime fromLocalDateTime,
-                                                                        LocalDateTime toLocalDateTime) {
+                                                                        LocalDateTime fromPaymentDate,
+                                                                        LocalDateTime toPaymentDate) {
         accountRepository.findById(fromAccountId).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + fromAccountId));
         List<Payment> payments = paymentRepository.findAllByFromAccountIdAndPaymentDateBetween(
-                fromAccountId, fromLocalDateTime, toLocalDateTime);
+                fromAccountId, fromPaymentDate, toPaymentDate);
         return payments.stream()
                 .map(this::convertPaymentModelToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<PaymentDTO> getAllFromToPaymentsByPaymentDateRange(UUID toAccountId,
-                                                                   LocalDateTime fromLocalDateTime,
-                                                                   LocalDateTime toLocalDateTime) {
+    public List<PaymentDTO> getAllToAccountPaymentsByPaymentDateRange(UUID toAccountId,
+                                                                      LocalDateTime fromPaymentDate,
+                                                                      LocalDateTime toPaymentDate) {
         accountRepository.findById(toAccountId).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + toAccountId));
-        List<Payment> payments = paymentRepository.findAllByFromAccountIdAndPaymentDateBetween(
-                toAccountId, fromLocalDateTime, toLocalDateTime);
+        List<Payment> payments = paymentRepository.findAllByToAccountIdAndPaymentDateBetween(
+                toAccountId, fromPaymentDate, toPaymentDate);
         return payments.stream()
                 .map(this::convertPaymentModelToDTO)
                 .collect(Collectors.toList());

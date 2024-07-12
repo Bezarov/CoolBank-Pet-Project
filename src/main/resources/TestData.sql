@@ -37,4 +37,6 @@ INSERT INTO card (expiration_date, account_id, id, card_holder_full_name, card_h
 INSERT INTO payment (amount, payment_date, from_account_id, id, to_account_id, description, payment_type, status) VALUES
 (200.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'c09f380e-08cd-4a6f-a01f-e373950f995f', 'f3371556-c57d-4f04-83e4-575120ce8c1d', 'b33ecf44-1071-43b1-8c28-67e274cccd60', 'Transfer to Jane', 'TRANSFER', 'COMPLETED'),
 (150.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'b33ecf44-1071-43b1-8c28-67e274cccd60', '5e37c6fa-7b7d-432f-b466-732498b37f6f', 'e7b9ea34-9bd3-4625-81d4-ac53fa843686', 'Payment to Alice', 'TRANSFER', 'PENDING'),
-(100.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'e7b9ea34-9bd3-4625-81d4-ac53fa843686', 'f3a3c171-512a-4550-b933-89d24d59597f', 'cddc1fd7-fd00-4953-ab81-0147ec5a1efd', 'Transfer to John', 'TRANSFER', 'COMPLETED');
+(100.00, '2011-08-21 02:01:22', 'e7b9ea34-9bd3-4625-81d4-ac53fa843686', 'f3a3c171-512a-4550-b933-89d24d59597f', 'cddc1fd7-fd00-4953-ab81-0147ec5a1efd', 'Transfer to John', 'TRANSFER', 'COMPLETED'),
+(100.00, '2012-08-21 01:01:22', 'e7b9ea34-9bd3-4625-81d4-ac53fa843686', '85753405-5f73-461f-b049-f62b7423102d', 'cddc1fd7-fd00-4953-ab81-0147ec5a1efd', 'Transfer to John', 'TRANSFER', 'COMPLETED'),
+(100.00, '2013-09-21 02:01:22', 'e7b9ea34-9bd3-4625-81d4-ac53fa843686', '3f2592b4-d5d5-4d61-ba00-f16eb80d2998', 'cddc1fd7-fd00-4953-ab81-0147ec5a1efd', 'Transfer to John', 'TRANSFER', 'COMPLETED');

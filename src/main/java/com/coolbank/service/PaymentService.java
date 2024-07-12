@@ -1,7 +1,6 @@
 package com.coolbank.service;
 
 import com.coolbank.dto.PaymentDTO;
-import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -9,17 +8,15 @@ import java.util.List;
 import java.util.UUID;
 
 public interface PaymentService {
-    ResponseEntity<String> createPaymentFromAccountIdToAccountId(PaymentDTO paymentDTO);
+    PaymentDTO createPaymentByAccounts(PaymentDTO paymentDTO);
 
-    ResponseEntity<String> createPaymentFromCardNumberToCardNumber(String fromCardNumber,
-                                                                   String toCardNumber,
-                                                                   BigDecimal amount);
+    PaymentDTO createPaymentByCards(String fromCardNumber, String toCardNumber, BigDecimal amount);
 
     PaymentDTO getPaymentById(UUID paymentId);
 
-    List<PaymentDTO> getPaymentsByStatus(UUID fromAccountId, String status);
-
     List<PaymentDTO> getAllAccountPaymentsByFromAccount(UUID fromAccountId);
+
+    List<PaymentDTO> getPaymentsByStatus(UUID fromAccountId, String status);
 
     List<PaymentDTO> getAllAccountPaymentsByToAccount(UUID toAccountId);
 
@@ -27,10 +24,10 @@ public interface PaymentService {
                                                         String paymentType);
 
     List<PaymentDTO> getAllFromAccountPaymentsByPaymentDateRange(UUID fromAccountId,
-                                                                 LocalDateTime fromLocalDateTime,
-                                                                 LocalDateTime toLocalDateTime);
+                                                                 LocalDateTime fromPaymentDate,
+                                                                 LocalDateTime toPaymentDate);
 
-    List<PaymentDTO> getAllFromToPaymentsByPaymentDateRange(UUID toAccountId,
-                                                            LocalDateTime fromLocalDateTime,
-                                                            LocalDateTime toLocalDateTime);
+    List<PaymentDTO> getAllToAccountPaymentsByPaymentDateRange(UUID toAccountId,
+                                                               LocalDateTime fromPaymentDate,
+                                                               LocalDateTime toPaymentDate);
 }

@@ -7,14 +7,13 @@ import java.util.UUID;
 
 public class PaymentDTO {
     private UUID id;
-    private BigDecimal amount;
     private UUID fromAccount;
     private UUID toAccount;
-    private LocalDateTime paymentDate;
-    private String status;
     private String paymentType;
+    private BigDecimal amount;
+    private String status;
+    private LocalDateTime paymentDate;
     private String description;
-
 
     public PaymentDTO() {
     }
