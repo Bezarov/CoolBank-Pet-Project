@@ -63,7 +63,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResponseEntity<String> createAccount(UUID userId, AccountDTO accountDTO) {
         usersRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userId));
+                HttpStatus.NOT_FOUND, "User with such ID was NOT Found " + userId));
 
         accountRepository.save(convertAccountDTOToModel(userId, accountDTO));
         return new ResponseEntity<>("Account created successfully", HttpStatus.CREATED);
@@ -74,7 +74,7 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findByAccountName(accountName)
                 .map(this::convertAccountModelToDTO)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Account with such NAME was NOT Found" + accountName));
+                        HttpStatus.NOT_FOUND, "Account with such NAME was NOT Found " + accountName));
     }
 
     @Override
@@ -82,13 +82,13 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findById(accountId)
                 .map(this::convertAccountModelToDTO)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + accountId));
+                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + accountId));
     }
 
     @Override
     public List<AccountDTO> getAllUserAccountsByUserId(UUID userId) {
         usersRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userId));
+                HttpStatus.NOT_FOUND, "User with such ID was NOT Found " + userId));
 
         List<Account> accounts = accountRepository.findAllByUsersId(userId);
         return accounts.stream()
@@ -99,7 +99,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<AccountDTO> getAllAccountByHolderFullName(String accountHolderFullName) {
         usersRepository.findByFullName(accountHolderFullName).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "User with such Full Name was NOT Found" + accountHolderFullName));
+                HttpStatus.NOT_FOUND, "User with such Full Name was NOT Found " + accountHolderFullName));
 
         List<Account> accounts = accountRepository.findByAccountHolderFullName(accountHolderFullName);
         return accounts.stream()
@@ -112,13 +112,13 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findById(accountId)
                 .map(Account::getBalance)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + accountId));
+                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + accountId));
     }
 
     @Override
     public List<AccountDTO> getAllAccountsByStatus(UUID userId, String accountStatus) {
         usersRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userId));
+                HttpStatus.NOT_FOUND, "User with such ID was NOT Found " + userId));
 
         List<Account> accounts = accountRepository.findAllByUsersId(userId);
         return accounts.stream()
@@ -136,7 +136,7 @@ public class AccountServiceImpl implements AccountService {
                     return convertAccountModelToDTO(EntityAccount);
                 })
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + accountId));
+                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + accountId));
     }
 
     @Override
@@ -152,7 +152,7 @@ public class AccountServiceImpl implements AccountService {
                     return convertAccountModelToDTO(EntityAccount);
                 })
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + accountId));
+                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + accountId));
     }
 
     @Override
@@ -164,7 +164,7 @@ public class AccountServiceImpl implements AccountService {
                     return convertAccountModelToDTO(EntityAccount);
                 })
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + accountId));
+                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + accountId));
     }
 
     @Override
@@ -176,7 +176,7 @@ public class AccountServiceImpl implements AccountService {
                     return convertAccountModelToDTO(EntityAccount);
                 })
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + accountId));
+                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + accountId));
     }
 
     @Override
@@ -188,7 +188,7 @@ public class AccountServiceImpl implements AccountService {
                     return convertAccountModelToDTO(EntityAccount);
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Account with such Account Name was NOT Found" + accountName));
+                        "Account with such Account Name was NOT Found " + accountName));
     }
 
     @Transactional
@@ -200,7 +200,7 @@ public class AccountServiceImpl implements AccountService {
                     return accountRepository.save(EntityAccount);
                 })
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + accountId));
+                        HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + accountId));
         cardRepository.findAllByAccountId(accountId).forEach(EntityCard -> {
             EntityCard.setStatus("DEACTIVATED");
             cardRepository.save(EntityCard);
@@ -217,7 +217,7 @@ public class AccountServiceImpl implements AccountService {
                     return accountRepository.save(EntityAccount);
                 })
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Account with such Account Name was NOT Found" + accountName));
+                        HttpStatus.NOT_FOUND, "Account with such Account Name was NOT Found " + accountName));
         cardRepository.findAllByAccountId(accountRepository.findByAccountName(accountName).get().getId())
                 .forEach(EntityCard -> {
                     EntityCard.setStatus("DEACTIVATED");
@@ -230,7 +230,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResponseEntity<String> deleteAllUserAccountsByUserId(UUID userId) {
         usersRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userId));
+                HttpStatus.NOT_FOUND, "User with such ID was NOT Found " + userId));
 
         accountRepository.findAllByUsersId(userId).forEach(EntityAccount -> {
             EntityAccount.setStatus("PRE-REMOVED");

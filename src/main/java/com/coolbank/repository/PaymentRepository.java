@@ -11,8 +11,11 @@ import java.util.UUID;
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, UUID> {
     List<Payment> findAllByFromAccountId(UUID accountId);
+
     List<Payment> findAllByToAccountId(UUID accountId);
+
     List<Payment> findAllByPaymentType(String paymentType);
+
     List<Payment> findAllByFromAccountIdAndPaymentDateBetween(UUID accountId,
                                                               LocalDateTime fromLocalDateTime,
                                                               LocalDateTime toLocalDateTime);

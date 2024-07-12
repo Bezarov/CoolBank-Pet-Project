@@ -2,6 +2,7 @@ package com.coolbank.service;
 
 import com.coolbank.dto.CardDTO;
 import com.coolbank.model.Card;
+import com.coolbank.model.Users;
 import com.coolbank.repository.AccountRepository;
 import com.coolbank.repository.CardRepository;
 import com.coolbank.repository.UsersRepository;
@@ -38,17 +39,20 @@ public class CardServiceImpl implements CardService {
         cardDTO.setId(card.getId());
         cardDTO.setCardNumber(card.getCardNumber());
         cardDTO.setCardHolderFullName(card.getCardHolderFullName());
+        cardDTO.setCardHolderId(card.getCardHolderUUID());
         cardDTO.setExpirationDate(card.getExpirationDate());
         cardDTO.setCvv(card.getCvv());
-        cardDTO.setAccount(card.getAccount());
+        cardDTO.setAccountId(card.getAccount().getId());
         cardDTO.setStatus(card.getStatus());
         return cardDTO;
     }
 
     private Card cardGenerator(UUID accountId, String cardHolderFullName) {
         Card card = new Card();
-        card.setAccount(accountRepository.findById(accountId).orElseThrow(() ->
-                new RuntimeException("Account ID Not Found in Database")));
+        card.setAccount(accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account ID Not Found in Database")));
+        card.setCardHolderUUID(usersRepository.findByFullName(cardHolderFullName).map(Users::getId)
+                .orElseThrow(() -> new RuntimeException("User Full Name Not Found in Database")));
         card.setCardNumber(cardNumberGenerator());
         card.setCardHolderFullName(cardHolderFullName);
         card.setExpirationDate(LocalDate.now().plusYears(random.nextInt(5) + 1));
@@ -71,7 +75,7 @@ public class CardServiceImpl implements CardService {
     @Override
     public ResponseEntity<String> createCard(UUID accountId, String cardHolderFullName) {
         accountRepository.findById(accountId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + accountId));
+                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + accountId));
         cardRepository.save(cardGenerator(accountId, cardHolderFullName));
         return new ResponseEntity<>("Card created successfully", HttpStatus.CREATED);
     }
@@ -81,7 +85,7 @@ public class CardServiceImpl implements CardService {
         return cardRepository.findById(cardId)
                 .map(this::convertCardModelToDTO)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Card with such ID was NOT Found" + cardId));
+                        HttpStatus.NOT_FOUND, "Card with such ID was NOT Found " + cardId));
     }
 
     @Override
@@ -89,21 +93,24 @@ public class CardServiceImpl implements CardService {
         return cardRepository.findByCardNumber(cardNumber)
                 .map(this::convertCardModelToDTO)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Card with such Card Number was NOT Found" + cardNumber));
+                        HttpStatus.NOT_FOUND, "Card with such Card Number was NOT Found " + cardNumber));
     }
 
     @Override
-    public CardDTO getCardByCardHolderFullName(String cardHolderFullName) {
-        return cardRepository.findByCardHolderFullName(cardHolderFullName)
+    public List<CardDTO> getCardsByCardHolderFullName(String cardHolderFullName) {
+        usersRepository.findByFullName(cardHolderFullName).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "User with such Full Name was NOT Found " + cardHolderFullName));
+
+        List<Card> cards = cardRepository.findAllByCardHolderFullName(cardHolderFullName);
+        return cards.stream()
                 .map(this::convertCardModelToDTO)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Card with such Card Holder Full Name was NOT Found" + cardHolderFullName));
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<CardDTO> getAllAccountCardsByAccountId(UUID accountId) {
         accountRepository.findById(accountId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + accountId));
+                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + accountId));
 
         List<Card> cards = cardRepository.findAllByAccountId(accountId);
         return cards.stream()
@@ -114,7 +121,7 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<CardDTO> getAllUserCardsByCardHolderId(UUID holderId) {
         usersRepository.findById(holderId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + holderId));
+                HttpStatus.NOT_FOUND, "User with such ID was NOT Found " + holderId));
         List<Card> cards = cardRepository.findAllByCardHolderUUID(holderId);
         return cards.stream()
                 .map(this::convertCardModelToDTO)
@@ -124,7 +131,7 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<CardDTO> getAllUserCardsByStatus(UUID holderId, String status) {
         usersRepository.findById(holderId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + holderId));
+                HttpStatus.NOT_FOUND, "User with such ID was NOT Found " + holderId));
         List<Card> cards = cardRepository.findAllByStatus(status);
         return cards.stream()
                 .map(this::convertCardModelToDTO)
@@ -132,9 +139,9 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public List<CardDTO> getAllExpiredCard(UUID holderId) {
+    public List<CardDTO> getAllExpiredCards(UUID holderId) {
         usersRepository.findById(holderId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + holderId));
+                HttpStatus.NOT_FOUND, "User with such ID was NOT Found " + holderId));
         List<Card> cards = cardRepository.findAllByCardHolderUUID(holderId);
         return cards.stream()
                 .filter(card -> card.getExpirationDate().isBefore(LocalDate.now()))
@@ -143,9 +150,9 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public List<CardDTO> getAllNotExpiredCard(UUID holderId) {
+    public List<CardDTO> getAllActiveCards(UUID holderId) {
         usersRepository.findById(holderId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + holderId));
+                HttpStatus.NOT_FOUND, "User with such ID was NOT Found " + holderId));
         List<Card> cards = cardRepository.findAllByCardHolderUUID(holderId);
         return cards.stream()
                 .filter(card -> card.getExpirationDate().isAfter(LocalDate.now()))
@@ -153,27 +160,54 @@ public class CardServiceImpl implements CardService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public CardDTO updateCardStatusById(UUID cardId, String status) {
+        return cardRepository.findById(cardId)
+                .map(EntityCard -> {
+                    EntityCard.setStatus(status);
+                    cardRepository.save(EntityCard);
+                    return convertCardModelToDTO(EntityCard);
+                })
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Card with such ID was NOT Found " + cardId));
+    }
+
+    @Override
+    public CardDTO updateCardStatusByCardNumber(String cardNumber, String status) {
+        return cardRepository.findByCardNumber(cardNumber)
+                .map(EntityCard -> {
+                    EntityCard.setStatus(status);
+                    cardRepository.save(EntityCard);
+                    return convertCardModelToDTO(EntityCard);
+                })
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Card with such Card Number was NOT Found " + cardNumber));
+    }
+
     @Transactional
     @Override
-    public void deleteCardById(UUID cardId) {
+    public ResponseEntity<String> deleteCardById(UUID cardId) {
         cardRepository.findById(cardId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Card with such ID was NOT Found" + cardId));
+                HttpStatus.NOT_FOUND, "Card with such ID was NOT Found " + cardId));
         cardRepository.deleteById(cardId);
+        return new ResponseEntity<>("Card deleted successfully", HttpStatus.ACCEPTED);
     }
 
     @Transactional
     @Override
-    public void deleteAllAccountCardsByAccountId(UUID accountId) {
+    public ResponseEntity<String> deleteAllAccountCardsByAccountId(UUID accountId) {
         accountRepository.findById(accountId).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found" + accountId));
+                HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + accountId));
         cardRepository.deleteAllByAccountId(accountId);
+        return new ResponseEntity<>("Cards deleted successfully", HttpStatus.ACCEPTED);
     }
 
     @Transactional
     @Override
-    public void deleteAllUsersCardsByCardHolderUUID(UUID cardHolderUUID) {
+    public ResponseEntity<String> deleteAllUsersCardsByCardHolderUUID(UUID cardHolderUUID) {
         usersRepository.findById(cardHolderUUID).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + cardHolderUUID));
+                HttpStatus.NOT_FOUND, "User with such ID was NOT Found " + cardHolderUUID));
         cardRepository.deleteAllByCardHolderUUID(cardHolderUUID);
+        return new ResponseEntity<>("Cards deleted successfully", HttpStatus.ACCEPTED);
     }
 }

@@ -1,30 +1,30 @@
 package com.coolbank.dto;
 
-import com.coolbank.model.Account;
-
 import java.time.LocalDate;
 import java.util.UUID;
 
 public class CardDTO {
     private UUID id;
+    private UUID accountId;
+    private UUID cardHolderId;
     private String cardNumber;
     private String cardHolderFullName;
     private LocalDate expirationDate;
     private String cvv;
-    private Account account;
     private String status;
 
     public CardDTO() {
     }
 
     public CardDTO(UUID id, String cardNumber, String cardHolderFullName,
-                   LocalDate expirationDate, String cvv, Account account, String status) {
+                   UUID cardHolderId, LocalDate expirationDate, String cvv, UUID accountId, String status) {
         this.id = id;
         this.cardNumber = cardNumber;
         this.cardHolderFullName = cardHolderFullName;
+        this.cardHolderId = cardHolderId;
         this.expirationDate = expirationDate;
         this.cvv = cvv;
-        this.account = account;
+        this.accountId = accountId;
         this.status = status;
     }
 
@@ -34,6 +34,14 @@ public class CardDTO {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public UUID getCardHolderId() {
+        return cardHolderId;
+    }
+
+    public void setCardHolderId(UUID cardHolderId) {
+        this.cardHolderId = cardHolderId;
     }
 
     public String getCardNumber() {
@@ -68,12 +76,12 @@ public class CardDTO {
         this.cvv = cvv;
     }
 
-    public Account getAccount() {
-        return account;
+    public UUID getAccountId() {
+        return accountId;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setAccountId(UUID accountId) {
+        this.accountId = accountId;
     }
 
     public String getStatus() {

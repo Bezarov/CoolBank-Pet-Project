@@ -131,7 +131,7 @@ public class UsersServiceImpl implements UsersService {
     public ResponseEntity<String> deleteUserByEmail(String userEmail) {
         usersRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userEmail));
+                        HttpStatus.NOT_FOUND, "User with such Email was NOT Found" + userEmail));
         usersRepository.deleteByEmail(userEmail);
         return new ResponseEntity<>("User deleted successfully", HttpStatus.ACCEPTED);
     }
@@ -141,7 +141,7 @@ public class UsersServiceImpl implements UsersService {
     public ResponseEntity<String> deleteUserByFullName(String userFullName) {
         usersRepository.findByFullName(userFullName)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userFullName));
+                        HttpStatus.NOT_FOUND, "User with such Full Name was NOT Found" + userFullName));
         usersRepository.deleteByFullName(userFullName);
         return new ResponseEntity<>("User deleted successfully", HttpStatus.ACCEPTED);
     }

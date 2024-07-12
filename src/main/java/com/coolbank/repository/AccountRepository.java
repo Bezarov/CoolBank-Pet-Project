@@ -16,8 +16,4 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
 
     List<Account> findByAccountHolderFullName(String accountHolderFullName);
 
-    void deleteByAccountName(String accountName);
-
-    void deleteAllByUsersId(UUID userId);
-
 }

@@ -12,19 +12,26 @@ public interface CardService {
     CardDTO getCardById(UUID cardId);
 
     CardDTO getCardByCardNumber(String cardNumber);
-    CardDTO getCardByCardHolderFullName(String cardHolderFullName);
+
+    List<CardDTO> getCardsByCardHolderFullName(String cardHolderFullName);
 
     List<CardDTO> getAllAccountCardsByAccountId(UUID accountId);
 
     List<CardDTO> getAllUserCardsByCardHolderId(UUID holderId);
 
     List<CardDTO> getAllUserCardsByStatus(UUID holderId, String status);
-    List<CardDTO> getAllExpiredCard(UUID holderId);
-    List<CardDTO> getAllNotExpiredCard(UUID holderId);
 
-    void deleteCardById(UUID cardId);
+    List<CardDTO> getAllExpiredCards(UUID holderId);
 
-    void deleteAllAccountCardsByAccountId(UUID accountId);
+    List<CardDTO> getAllActiveCards(UUID holderId);
 
-    void deleteAllUsersCardsByCardHolderUUID(UUID cardHolderUUID);
+    CardDTO updateCardStatusById(UUID cardId, String status);
+
+    CardDTO updateCardStatusByCardNumber(String cardNumber, String status);
+
+    ResponseEntity<String> deleteCardById(UUID cardId);
+
+    ResponseEntity<String> deleteAllAccountCardsByAccountId(UUID accountId);
+
+    ResponseEntity<String> deleteAllUsersCardsByCardHolderUUID(UUID cardHolderUUID);
 }

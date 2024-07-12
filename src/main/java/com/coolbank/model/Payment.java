@@ -21,7 +21,6 @@ public class Payment {
     private LocalDateTime paymentDate;
     private String paymentType;
     private String status;
-
     private String description;
 
     public Payment() {
