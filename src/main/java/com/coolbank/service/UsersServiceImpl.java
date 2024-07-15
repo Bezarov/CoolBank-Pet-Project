@@ -1,9 +1,12 @@
 package com.coolbank.service;
 
+import com.coolbank.controller.UsersController;
 import com.coolbank.dto.UsersDTO;
 import com.coolbank.model.Users;
 import com.coolbank.repository.UsersRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Service
 public class UsersServiceImpl implements UsersService {
+    private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class);
     private final UsersRepository usersRepository;
 
     @Autowired
@@ -40,20 +45,22 @@ public class UsersServiceImpl implements UsersService {
         users.setPassword(usersDTO.getPassword());
         users.setPhoneNumber(usersDTO.getPhoneNumber());
         users.setId(usersDTO.getId());
-        users.setCreatedDate(LocalDateTime.now());
+        users.setCreatedDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         users.setStatus("ACTIVE");
         return users;
     }
 
     @Override
-    public ResponseEntity<String> createUser(UsersDTO usersDTO) {
+    public UsersDTO createUser(UsersDTO usersDTO) {
         usersRepository.findByEmail(usersDTO.getEmail())
                 .ifPresent(EntityUser -> {
+                    logger.warn("User with email {} already exists", usersDTO.getEmail());
                     throw new ResponseStatusException(
                             HttpStatus.FOUND, "User with such Email ALREADY EXIST: " + usersDTO.getEmail());
                 });
-        usersRepository.save(convertUsersDTOToModel(usersDTO));
-        return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
+        Users user = usersRepository.save(convertUsersDTOToModel(usersDTO));
+        logger.info("User created successfully with email {}", usersDTO.getEmail());
+        return convertUsersModelToDTO(user);
     }
 
     @Override

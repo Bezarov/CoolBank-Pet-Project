@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.UUID;
 
 public interface UsersService {
-    ResponseEntity<String> createUser(UsersDTO usersDTO);
+    UsersDTO createUser(UsersDTO usersDTO);
 
     UsersDTO getUserById(UUID userId);
 
