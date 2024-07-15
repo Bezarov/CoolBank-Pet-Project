@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CardService {
-    ResponseEntity<String> createCard(UUID accountId, String cardHolderFullName);
+    CardDTO createCard(UUID accountId, String cardHolderFullName);
 
     CardDTO getCardById(UUID cardId);
 

@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ public class AccountServiceImpl implements AccountService {
         account.setAccountHolderFullName(accountDTO.getAccountHolderFullName());
         account.setStatus(accountDTO.getStatus());
         account.setAccountType(accountDTO.getAccountType());
-        account.setCreatedDate(LocalDateTime.now());
+        account.setCreatedDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         account.setCurrency(accountDTO.getCurrency());
         account.setUser(usersRepository.findById(usersId).orElseThrow(() ->
                 new RuntimeException("User ID Not Found in Database")));
@@ -61,12 +62,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ResponseEntity<String> createAccount(UUID userId, AccountDTO accountDTO) {
+    public AccountDTO createAccount(UUID userId, AccountDTO accountDTO) {
         usersRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "User with such ID was NOT Found " + userId));
 
-        accountRepository.save(convertAccountDTOToModel(userId, accountDTO));
-        return new ResponseEntity<>("Account created successfully", HttpStatus.CREATED);
+        Account account = accountRepository.save(convertAccountDTOToModel(userId, accountDTO));
+        return convertAccountModelToDTO(account);
     }
 
     @Override

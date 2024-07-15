@@ -66,23 +66,23 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public PaymentDTO createPaymentByAccounts(PaymentDTO paymentDTO) {
-        // Находим аккаунт, с которого будут списываться средства
+        // Finding the account from which the funds will be debited
         Account accountFromAccount = accountRepository.findById(paymentDTO.getFromAccount())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "From Account ID " + paymentDTO.getFromAccount() + " was NOT Found"));
-        // Проверяем наличие на наличие достаточных средств
+        // Checking availability of sufficient funds
         if (accountFromAccount.getBalance().compareTo(paymentDTO.getAmount()) < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "INSUFFICIENT FUNDS");
         }
-        // Вычитаем сумму платежа из баланса аккаунта
+        // Subtracting the payment amount from the account balance
         accountFromAccount.setBalance(accountFromAccount.getBalance().subtract(paymentDTO.getAmount()));
         accountRepository.save(accountFromAccount);
 
-        // Находим аккаунт, на который будут зачислены средства
+        //Find the account to which the funds will be credited
         Account accountToAccount = accountRepository.findById(paymentDTO.getToAccount())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "To Account ID " + paymentDTO.getToAccount() + " was NOT Found"));
-        // Зачисляем сумму платежа к балансу аккаунта
+        // Crediting the payment amount to your account balance
         accountToAccount.setBalance(accountToAccount.getBalance().add(paymentDTO.getAmount()));
         accountRepository.save(accountToAccount);
 
@@ -94,25 +94,25 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public PaymentDTO createPaymentByCards(String fromCardNumber, String toCardNumber, BigDecimal amount) {
-        // Находим аккаунт, с которого будут списываться средства
+        // Finding the account from which the funds will be debited
         Account accountFromAccount = cardRepository.findByCardNumber(fromCardNumber)
                 .map(Card::getAccount)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Linked Account to this Card Number: " + fromCardNumber + " was NOT Found"));
-        // Проверяем наличие на наличие достаточных средств
+        // Checking availability of sufficient funds
         if (accountFromAccount.getBalance().compareTo(amount) < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "INSUFFICIENT FUNDS");
         }
-        // Вычитаем сумму платежа из баланса аккаунта
+        // Subtracting the payment amount from the account balance
         accountFromAccount.setBalance(accountFromAccount.getBalance().subtract(amount));
         accountRepository.save(accountFromAccount);
 
-        // Находим аккаунт, на который будут зачислены средства
+        //Find the account to which the funds will be credited
         Account accountToAccount = cardRepository.findByCardNumber(toCardNumber)
                 .map(Card::getAccount)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Linked Account to this Card Number: " + toCardNumber + " was NOT Found"));
-        // Зачисляем сумму платежа к балансу аккаунта
+        // Crediting the payment amount to your account balance
         accountToAccount.setBalance(accountToAccount.getBalance().add(amount));
         accountRepository.save(accountToAccount);
 

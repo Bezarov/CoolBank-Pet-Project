@@ -73,11 +73,11 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public ResponseEntity<String> createCard(UUID accountId, String cardHolderFullName) {
+    public CardDTO createCard(UUID accountId, String cardHolderFullName) {
         accountRepository.findById(accountId).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Account with such ID was NOT Found " + accountId));
-        cardRepository.save(cardGenerator(accountId, cardHolderFullName));
-        return new ResponseEntity<>("Card created successfully", HttpStatus.CREATED);
+        Card card = cardRepository.save(cardGenerator(accountId, cardHolderFullName));
+        return convertCardModelToDTO(card);
     }
 
     @Override

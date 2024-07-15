@@ -2,6 +2,8 @@ package com.coolbank.controller;
 
 import com.coolbank.dto.AccountDTO;
 import com.coolbank.service.AccountServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/account")
 public class AccountController {
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
     private final AccountServiceImpl accountService;
 
     public AccountController(AccountServiceImpl accountService) {
@@ -19,36 +22,45 @@ public class AccountController {
     }
 
     @PostMapping("/register/{userId}")
-    public ResponseEntity<String> createAccount(@PathVariable UUID userId, @RequestBody AccountDTO accountDTO) {
-        return accountService.createAccount(userId, accountDTO);
+    public ResponseEntity<AccountDTO> createAccount(@PathVariable UUID userId,
+                                                    @RequestBody AccountDTO accountDTO) {
+        logger.debug("Received POST request to create Account to User with ID {}", userId);
+        return ResponseEntity.ok(accountService.createAccount(userId, accountDTO));
     }
 
     @GetMapping("/id/{accountId}")
     public ResponseEntity<AccountDTO> getAccountById(@PathVariable UUID accountId) {
+        logger.debug("Received GET request to get Account by ID {}", accountId);
         AccountDTO accountDTO = accountService.getAccountById(accountId);
         return ResponseEntity.ok(accountDTO);
     }
 
 
     @GetMapping("/username/{accountHolderFullName}")
-    public ResponseEntity<List<AccountDTO>> getAllAccountByHolderFullName(@PathVariable String accountHolderFullName) {
+    public ResponseEntity<List<AccountDTO>> getAllAccountByHolderFullName(@PathVariable
+                                                                              String accountHolderFullName) {
+        logger.debug("Received GET request to get All User Accounts by HOLDER FULL NAME {}",
+                accountHolderFullName);
         return ResponseEntity.ok(accountService.getAllAccountByHolderFullName(accountHolderFullName));
     }
 
     @GetMapping("/balance/{accountId}")
     public ResponseEntity<BigDecimal> getBalanceByAccountId(@PathVariable UUID accountId) {
+        logger.debug("Received GET request to get Account balance by ACCOUNT ID {}", accountId);
         BigDecimal bigDecimal = accountService.getBalanceByAccountId(accountId);
         return ResponseEntity.ok(bigDecimal);
     }
 
     @GetMapping("/name/{accountName}")
     public ResponseEntity<AccountDTO> getAccountByAccountName(@PathVariable String accountName) {
+        logger.debug("Received GET request to get Account by ACCOUNT NAME {}", accountName);
         AccountDTO accountDTO = accountService.getAccountByAccountName(accountName);
         return ResponseEntity.ok(accountDTO);
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<AccountDTO>> getAllUserAccountsByUserId(@PathVariable UUID userId) {
+        logger.debug("Received GET request to get All User Accounts by USER ID {}", userId);
         List<AccountDTO> accountDTOS = accountService.getAllUserAccountsByUserId(userId);
         return ResponseEntity.ok(accountDTOS);
     }
@@ -56,12 +68,17 @@ public class AccountController {
     @GetMapping("/user/{userId}/status/{accountStatus}")
     public ResponseEntity<List<AccountDTO>> getAccountsByStatus(@PathVariable UUID userId,
                                                                 @PathVariable String accountStatus) {
+        logger.debug("Received GET request to get All User (USER ID - {}) Accounts by ACCOUNT STATUS {}",
+                userId, accountStatus);
         List<AccountDTO> accountDTOS = accountService.getAllAccountsByStatus(userId, accountStatus);
         return ResponseEntity.ok(accountDTOS);
     }
 
     @PatchMapping("/refill/{accountId}/{amount}")
-    public ResponseEntity<AccountDTO> refillAccount(@PathVariable UUID accountId, @PathVariable BigDecimal amount) {
+    public ResponseEntity<AccountDTO> refillAccount(@PathVariable UUID accountId,
+                                                    @PathVariable BigDecimal amount) {
+        logger.debug("Received PATCH request to refill Account with ID - {} in AMOUNT OF  {}",
+                accountId, amount);
         AccountDTO accountDTO = accountService.refillAccount(accountId, amount);
         return ResponseEntity.ok(accountDTO);
     }

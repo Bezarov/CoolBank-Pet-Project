@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface AccountService {
-    ResponseEntity<String> createAccount(UUID userId, AccountDTO accountDTO);
+    AccountDTO createAccount(UUID userId, AccountDTO accountDTO);
 
     AccountDTO getAccountByAccountName(String accountName);
 

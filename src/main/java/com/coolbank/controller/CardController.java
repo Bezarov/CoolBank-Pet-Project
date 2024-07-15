@@ -18,9 +18,9 @@ public class CardController {
     }
 
     @PostMapping("/register/{accountId}/{cardHolderFullName}")
-    public ResponseEntity<String> createCard(@PathVariable UUID accountId,
+    public ResponseEntity<CardDTO> createCard(@PathVariable UUID accountId,
                                              @PathVariable String cardHolderFullName) {
-        return cardService.createCard(accountId, cardHolderFullName);
+        return ResponseEntity.ok(cardService.createCard(accountId, cardHolderFullName));
     }
 
     @GetMapping("/id/{cardId}")
