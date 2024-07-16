@@ -93,4 +93,15 @@ public class PaymentDTO {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "PaymentDTO{" +
+                ", fromAccount=" + fromAccount +
+                ", toAccount=" + toAccount +
+                ", amount=" + amount +
+                ", paymentDate=" + paymentDate +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

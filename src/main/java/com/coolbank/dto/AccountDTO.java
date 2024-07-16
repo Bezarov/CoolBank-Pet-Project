@@ -107,5 +107,16 @@ public class AccountDTO {
         this.cards = cards;
     }
 
-
+    @Override
+    public String toString() {
+        return "AccountDTO{" +
+                ", accountName='" + accountName + '\'' +
+                ", balance=" + balance +
+                ", accountHolderFullName='" + accountHolderFullName + '\'' +
+                ", status='" + status + '\'' +
+                ", accountType='" + accountType + '\'' +
+                ", createdDate=" + createdDate +
+                ", currency='" + currency +
+                '}';
+    }
 }

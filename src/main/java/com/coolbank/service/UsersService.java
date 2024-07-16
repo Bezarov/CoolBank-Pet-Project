@@ -16,7 +16,7 @@ public interface UsersService {
 
     UsersDTO getUserByPhoneNumber(String userPhoneNumber);
 
-    UsersDTO updateUser(UsersDTO usersDTO);
+    UsersDTO updateUser(UUID userId, UsersDTO usersDTO);
 
     UsersDTO updatePasswordById(UUID userId, String newPassword);
 

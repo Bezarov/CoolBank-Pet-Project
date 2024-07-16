@@ -96,10 +96,9 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public UsersDTO updateUser(UsersDTO usersDTO) {
+    public UsersDTO updateUser(UUID userId, UsersDTO usersDTO) {
         return usersRepository.findById(usersDTO.getId())
                 .map(EntityUser -> {
-                    EntityUser.setId(usersDTO.getId());
                     EntityUser.setFullName(usersDTO.getFullName());
                     EntityUser.setEmail(usersDTO.getEmail());
                     EntityUser.setPhoneNumber(usersDTO.getPhoneNumber());
