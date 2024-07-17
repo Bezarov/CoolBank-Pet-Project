@@ -1,6 +1,5 @@
 package com.coolbank.service;
 
-import com.coolbank.controller.UsersController;
 import com.coolbank.dto.UsersDTO;
 import com.coolbank.model.Users;
 import com.coolbank.repository.UsersRepository;
@@ -52,23 +51,28 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UsersDTO createUser(UsersDTO usersDTO) {
+        logger.info("Attempting to find User with Email: {}", usersDTO.getEmail());
         usersRepository.findByEmail(usersDTO.getEmail())
                 .ifPresent(EntityUser -> {
-                    logger.warn("User with email {} already exists", usersDTO.getEmail());
+                    logger.error("User with Email: {}, already exists", usersDTO.getEmail());
                     throw new ResponseStatusException(
                             HttpStatus.FOUND, "User with such Email ALREADY EXIST: " + usersDTO.getEmail());
                 });
         Users user = usersRepository.save(convertUsersDTOToModel(usersDTO));
-        logger.info("User created successfully with email {}", usersDTO.getEmail());
+        logger.info("User created successfully: {}", usersDTO);
         return convertUsersModelToDTO(user);
     }
 
     @Override
     public UsersDTO getUserById(UUID userId) {
+        logger.info("Attempting to find user with ID: {}", userId);
         return usersRepository.findById(userId)
                 .map(this::convertUsersModelToDTO)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userId));
+                .orElseThrow(() -> {
+                    logger.error("User with ID: {} not found", userId);
+                    return new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "User with such ID was NOT Found: " + userId);
+                });
     }
 
     @Override

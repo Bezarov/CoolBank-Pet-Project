@@ -24,7 +24,7 @@ public class PaymentController {
 
     @PostMapping("/register/account")
     public ResponseEntity<PaymentDTO> createPaymentByAccounts(@RequestBody PaymentDTO paymentDTO) {
-        logger.debug("Received POST request for Transfer from Account to Account - {}", paymentDTO);
+        logger.debug("Received POST request for Transfer from Account to Account: {}", paymentDTO);
         return ResponseEntity.ok(paymentService.createPaymentByAccounts(paymentDTO));
     }
 
@@ -32,42 +32,42 @@ public class PaymentController {
     public ResponseEntity<PaymentDTO> createPaymentByCards(@PathVariable String fromCardNumber,
                                                            @PathVariable String toCardNumber,
                                                            @PathVariable BigDecimal amount) {
-        logger.debug("Received POST request for Transfer from Card to Card From Card - {}," +
-                " To Card - {}, in AMOUNT OF - {}", fromCardNumber, toCardNumber, amount);
+        logger.debug("Received POST request for Transfer from Card to Card From Card: {}," +
+                " To Card: {}, in AMOUNT OF: {}", fromCardNumber, toCardNumber, amount);
         return ResponseEntity.ok(paymentService.createPaymentByCards(fromCardNumber, toCardNumber, amount));
     }
 
     @GetMapping("/id/{paymentId}")
     public ResponseEntity<PaymentDTO> getPaymentById(@PathVariable UUID paymentId) {
-        logger.debug("Received GET request to get Payment by ID - {}", paymentId);
+        logger.debug("Received GET request to get Payment by ID: {}", paymentId);
         return ResponseEntity.ok(paymentService.getPaymentById(paymentId));
     }
 
     @GetMapping("/from/{fromAccountId}")
     public ResponseEntity<List<PaymentDTO>> getAllAccountPaymentsByFromAccount(@PathVariable UUID fromAccountId) {
-        logger.debug("Received GET request to get All Payments from Account ID - {}", fromAccountId);
+        logger.debug("Received GET request to get All Payments from Account ID: {}", fromAccountId);
         return ResponseEntity.ok(paymentService.getAllAccountPaymentsByFromAccount(fromAccountId));
     }
 
     @GetMapping("/to/{toAccountId}")
     public ResponseEntity<List<PaymentDTO>> getAllAccountPaymentsByToAccount(@PathVariable UUID toAccountId) {
-        logger.debug("Received GET request to get All Payments to Account ID - {}", toAccountId);
+        logger.debug("Received GET request to get All Payments to Account ID: {}", toAccountId);
         return ResponseEntity.ok(paymentService.getAllAccountPaymentsByToAccount(toAccountId));
     }
 
     @GetMapping("/from/{fromAccountId}/status/{status}")
     public ResponseEntity<List<PaymentDTO>> getPaymentsByStatus(@PathVariable UUID fromAccountId,
                                                                 @PathVariable String status) {
-        logger.debug("Received GET request to get All Payments from Account ID - {}" +
-                " with Status - {}", fromAccountId, status);
+        logger.debug("Received GET request to get All Payments from Account ID: {}," +
+                " with Status: {}", fromAccountId, status);
         return ResponseEntity.ok(paymentService.getPaymentsByStatus(fromAccountId, status));
     }
 
     @GetMapping("/from/{fromAccountId}/type/{paymentType}")
     public ResponseEntity<List<PaymentDTO>> getAllAccountPaymentsByPaymentType(
             @PathVariable UUID fromAccountId, @PathVariable String paymentType) {
-        logger.debug("Received GET request to get All Payments from Account ID - {}" +
-                " with Type - {}", fromAccountId, paymentType);
+        logger.debug("Received GET request to get All Payments from Account ID: {}," +
+                " with Type: {}", fromAccountId, paymentType);
         return ResponseEntity.ok(paymentService.getAllAccountPaymentsByPaymentType(fromAccountId, paymentType));
     }
 
@@ -76,7 +76,7 @@ public class PaymentController {
             @PathVariable UUID fromAccountId, @PathVariable LocalDateTime fromPaymentDate,
             @PathVariable LocalDateTime toPaymentDate) {
         logger.debug("Received GET request to get All Account Payments in date range FROM" +
-                        " Account with ID - {}, from - {}, to - {} ",
+                        " Account with ID: {}, from: {}, up to: {} ",
                 fromAccountId, fromPaymentDate, toPaymentDate);
         return ResponseEntity.ok(paymentService.getAllFromAccountPaymentsByPaymentDateRange(
                 fromAccountId, fromPaymentDate, toPaymentDate));
@@ -87,7 +87,7 @@ public class PaymentController {
             @PathVariable UUID toAccountId, @PathVariable LocalDateTime fromPaymentDate,
             @PathVariable LocalDateTime toPaymentDate) {
         logger.debug("Received GET request to get All Account Payments in date range TO" +
-                        " Account with ID - {}, from - {}, to - {} ",
+                        " Account with ID: {}, from: {}, up to: {} ",
                 toPaymentDate, fromPaymentDate, toPaymentDate);
         return ResponseEntity.ok(paymentService.getAllToAccountPaymentsByPaymentDateRange(
                 toAccountId, fromPaymentDate, toPaymentDate));
