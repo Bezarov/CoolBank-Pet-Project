@@ -43,19 +43,19 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.getPaymentById(paymentId));
     }
 
-    @GetMapping("/from/{fromAccountId}")
+    @GetMapping("/from/accountid/{fromAccountId}")
     public ResponseEntity<List<PaymentDTO>> getAllAccountPaymentsByFromAccount(@PathVariable UUID fromAccountId) {
         logger.debug("Received GET request to get All Payments from Account ID: {}", fromAccountId);
         return ResponseEntity.ok(paymentService.getAllAccountPaymentsByFromAccount(fromAccountId));
     }
 
-    @GetMapping("/to/{toAccountId}")
+    @GetMapping("/to/accountid/{toAccountId}")
     public ResponseEntity<List<PaymentDTO>> getAllAccountPaymentsByToAccount(@PathVariable UUID toAccountId) {
         logger.debug("Received GET request to get All Payments to Account ID: {}", toAccountId);
         return ResponseEntity.ok(paymentService.getAllAccountPaymentsByToAccount(toAccountId));
     }
 
-    @GetMapping("/from/{fromAccountId}/status/{status}")
+    @GetMapping("/from/accountid/{fromAccountId}/status/{status}")
     public ResponseEntity<List<PaymentDTO>> getPaymentsByStatus(@PathVariable UUID fromAccountId,
                                                                 @PathVariable String status) {
         logger.debug("Received GET request to get All Payments from Account ID: {}," +
@@ -63,7 +63,7 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.getPaymentsByStatus(fromAccountId, status));
     }
 
-    @GetMapping("/from/{fromAccountId}/type/{paymentType}")
+    @GetMapping("/from/accountid/{fromAccountId}/type/{paymentType}")
     public ResponseEntity<List<PaymentDTO>> getAllAccountPaymentsByPaymentType(
             @PathVariable UUID fromAccountId, @PathVariable String paymentType) {
         logger.debug("Received GET request to get All Payments from Account ID: {}," +
@@ -71,7 +71,7 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.getAllAccountPaymentsByPaymentType(fromAccountId, paymentType));
     }
 
-    @GetMapping("/from/{fromAccountId}/date/{fromPaymentDate}/date/{toPaymentDate}")
+    @GetMapping("/from/accountid/{fromAccountId}/date/{fromPaymentDate}/date/{toPaymentDate}")
     public ResponseEntity<List<PaymentDTO>> getAllFromAccountPaymentsByPaymentDateRange(
             @PathVariable UUID fromAccountId, @PathVariable LocalDateTime fromPaymentDate,
             @PathVariable LocalDateTime toPaymentDate) {
@@ -82,7 +82,7 @@ public class PaymentController {
                 fromAccountId, fromPaymentDate, toPaymentDate));
     }
 
-    @GetMapping("/to/{toAccountId}/date/{fromPaymentDate}/date/{toPaymentDate}")
+    @GetMapping("/to/accountid/{toAccountId}/date/{fromPaymentDate}/date/{toPaymentDate}")
     public ResponseEntity<List<PaymentDTO>> getAllFromToPaymentsByPaymentDateRange(
             @PathVariable UUID toAccountId, @PathVariable LocalDateTime fromPaymentDate,
             @PathVariable LocalDateTime toPaymentDate) {

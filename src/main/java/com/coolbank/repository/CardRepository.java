@@ -19,8 +19,4 @@ public interface CardRepository extends JpaRepository<Card, UUID> {
     List<Card> findAllByCardHolderUUID(UUID holderId);
 
     List<Card> findAllByStatus(String status);
-
-    void deleteAllByAccountId(UUID accountId);
-
-    void deleteAllByCardHolderUUID(UUID cardHolderUUID);
 }
