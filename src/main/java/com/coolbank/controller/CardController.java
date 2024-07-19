@@ -20,9 +20,9 @@ public class CardController {
         this.cardService = cardService;
     }
 
-    @PostMapping("/register/{accountId}/{cardHolderFullName}")
+    @PostMapping("/register/account/{accountId}/username/{cardHolderFullName}")
     public ResponseEntity<CardDTO> createCard(@PathVariable UUID accountId,
-                                             @PathVariable String cardHolderFullName) {
+                                              @PathVariable String cardHolderFullName) {
         logger.debug("Received POST request to create Card for Account with ID: {}," +
                 " And Card Holder Name: {}", accountId, cardHolderFullName);
         return ResponseEntity.ok(cardService.createCard(accountId, cardHolderFullName));
@@ -42,7 +42,7 @@ public class CardController {
         return ResponseEntity.ok(cardDTO);
     }
 
-    @GetMapping("/name/{cardHolderFullName}")
+    @GetMapping("/holdername/{cardHolderFullName}")
     public ResponseEntity<List<CardDTO>> getCardsByCardHolderFullName(@PathVariable String cardHolderFullName) {
         logger.debug("Received GET request to get All Cards by Card Holder Name: {}", cardHolderFullName);
         List<CardDTO> cards = cardService.getCardsByCardHolderFullName(cardHolderFullName);
@@ -56,14 +56,14 @@ public class CardController {
         return ResponseEntity.ok(cardDTOS);
     }
 
-    @GetMapping("/holder/{holderId}")
+    @GetMapping("/holderid/{holderId}")
     public ResponseEntity<List<CardDTO>> getAllUserCardsByCardHolderId(@PathVariable UUID holderId) {
         logger.debug("Received GET request to get All Cards by Card Holder ID: {}", holderId);
         List<CardDTO> cardDTOS = cardService.getAllUserCardsByCardHolderId(holderId);
         return ResponseEntity.ok(cardDTOS);
     }
 
-    @GetMapping("/holder/{holderId}/status/{status}")
+    @GetMapping("/holderid/{holderId}/status/{status}")
     public ResponseEntity<List<CardDTO>> getAllUserCardsByStatus(@PathVariable UUID holderId,
                                                                  @PathVariable String status) {
         logger.debug("Received GET request to get All Cards by Card Holder ID: {}," +
@@ -72,14 +72,14 @@ public class CardController {
         return ResponseEntity.ok(cardDTOS);
     }
 
-    @GetMapping("/expired/holder/{holderId}")
+    @GetMapping("/expired/holderid/{holderId}")
     public ResponseEntity<List<CardDTO>> getAllExpiredCard(@PathVariable UUID holderId) {
         logger.debug("Received GET request to get All Expired Cards by Card Holder ID: {}", holderId);
         List<CardDTO> cardDTOS = cardService.getAllExpiredCards(holderId);
         return ResponseEntity.ok(cardDTOS);
     }
 
-    @GetMapping("/active/holder/{holderId}")
+    @GetMapping("/active/holderid/{holderId}")
     public ResponseEntity<List<CardDTO>> getAllActiveCards(@PathVariable UUID holderId) {
         logger.debug("Received GET request to get All Active Cards by Card Holder ID: {}", holderId);
         List<CardDTO> cardDTOS = cardService.getAllActiveCards(holderId);
@@ -110,14 +110,14 @@ public class CardController {
         return cardService.deleteCardById(cardId);
     }
 
-    @DeleteMapping("/account/{accountId}")
+    @DeleteMapping("/accountid/{accountId}")
     public ResponseEntity<String> deleteAllAccountCardsByAccountId(@PathVariable UUID accountId) {
         logger.debug("Received DELETE request to remove All Account Cards" +
                 " by Account ID: {}", accountId);
         return cardService.deleteAllAccountCardsByAccountId(accountId);
     }
 
-    @DeleteMapping("/holder/{cardHolderUUID}")
+    @DeleteMapping("/holderid/{cardHolderUUID}")
     public ResponseEntity<String> deleteAllUsersCardsByCardHolderUUID(@PathVariable UUID cardHolderUUID) {
         logger.debug("Received DELETE request to remove All User Cards" +
                 " by Holder ID: {}", cardHolderUUID);

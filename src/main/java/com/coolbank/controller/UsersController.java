@@ -64,11 +64,11 @@ public class UsersController {
         return ResponseEntity.ok(ResponseUsersDTO);
     }
 
-    @PatchMapping("/update/{userId}/{newPassword}")
+    @PatchMapping("/update/id/{userId}/password/{newPassword}")
     public ResponseEntity<UsersDTO> updatePasswordById(@PathVariable UUID userId,
                                                        @PathVariable String newPassword) {
         logger.debug("Received PATCH request to update User password with ID: {}," +
-                " New Password: {}", newPassword, userId);
+                " New Password: {}", userId, newPassword);
         UsersDTO usersDTO = usersService.updatePasswordById(userId, newPassword);
         return ResponseEntity.ok(usersDTO);
     }

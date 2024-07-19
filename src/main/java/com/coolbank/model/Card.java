@@ -102,4 +102,16 @@ public class Card {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "id=" + id +
+                ", cardNumber='" + cardNumber + '\'' +
+                ", cardHolderFullName='" + cardHolderFullName + '\'' +
+                ", expirationDate=" + expirationDate +
+                ", cvv='" + cvv + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

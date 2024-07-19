@@ -54,105 +54,154 @@ public class UsersServiceImpl implements UsersService {
         logger.info("Attempting to find User with Email: {}", usersDTO.getEmail());
         usersRepository.findByEmail(usersDTO.getEmail())
                 .ifPresent(EntityUser -> {
-                    logger.error("User with Email: {}, already exists", usersDTO.getEmail());
-                    throw new ResponseStatusException(
-                            HttpStatus.FOUND, "User with such Email ALREADY EXIST: " + usersDTO.getEmail());
+                    logger.error("User with such Email: {}, already exists", usersDTO.getEmail());
+                    throw new ResponseStatusException(HttpStatus.FOUND,
+                            "User with such Email ALREADY EXIST: " + usersDTO.getEmail());
                 });
         Users user = usersRepository.save(convertUsersDTOToModel(usersDTO));
-        logger.info("User created successfully: {}", usersDTO);
+        logger.info("User created successfully: {}", user);
         return convertUsersModelToDTO(user);
     }
 
     @Override
     public UsersDTO getUserById(UUID userId) {
-        logger.info("Attempting to find user with ID: {}", userId);
+        logger.info("Attempting to find User with ID: {}", userId);
         return usersRepository.findById(userId)
-                .map(this::convertUsersModelToDTO)
+                .map(UserEntity -> {
+                    logger.info("User was found and received to the Controller: {}", UserEntity);
+                    return convertUsersModelToDTO(UserEntity);
+                })
                 .orElseThrow(() -> {
-                    logger.error("User with ID: {} not found", userId);
-                    return new ResponseStatusException(
-                            HttpStatus.NOT_FOUND, "User with such ID was NOT Found: " + userId);
+                    logger.error("User with such ID: {} was not found", userId);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "User with such ID was NOT Found: " + userId);
                 });
     }
 
     @Override
     public UsersDTO getUserByEmail(String userEmail) {
+        logger.info("Attempting to find User with Email: {}", userEmail);
         return usersRepository.findByEmail(userEmail)
-                .map(this::convertUsersModelToDTO)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User with such Email was NOT Found" + userEmail));
+                .map(UserEntity -> {
+                    logger.info("User was found and received to the Controller: {}", UserEntity);
+                    return convertUsersModelToDTO(UserEntity);
+                })
+                .orElseThrow(() -> {
+                    logger.error("User with such Email: {} was not found", userEmail);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "User with such Email was NOT Found: " + userEmail);
+                });
     }
 
     @Override
     public UsersDTO getUserByFullName(String userFullName) {
+        logger.info("Attempting to find User with Name: {}", userFullName);
         return usersRepository.findByFullName(userFullName)
-                .map(this::convertUsersModelToDTO)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User with such FullName was NOT Found" + userFullName));
+                .map(UserEntity -> {
+                    logger.info("User was found and received to the Controller: {}", UserEntity);
+                    return convertUsersModelToDTO(UserEntity);
+                })
+                .orElseThrow(() -> {
+                    logger.error("User with such Name: {} was not found", userFullName);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "User with such FullName was NOT Found: " + userFullName);
+                });
     }
 
     @Override
     public UsersDTO getUserByPhoneNumber(String userPhoneNumber) {
+        logger.info("Attempting to find User with Phone Number: {}", userPhoneNumber);
         return usersRepository.findByPhoneNumber(userPhoneNumber)
-                .map(this::convertUsersModelToDTO)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User with such PhoneNumber was NOT Found" + userPhoneNumber));
+                .map(UserEntity -> {
+                    logger.info("User was found and received to the Controller: {}", UserEntity);
+                    return convertUsersModelToDTO(UserEntity);
+                })
+                .orElseThrow(() -> {
+                    logger.error("User with such Phone Number: {} was not found", userPhoneNumber);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "User with such PhoneNumber was NOT Found: " + userPhoneNumber);
+                });
     }
 
     @Override
     public UsersDTO updateUser(UUID userId, UsersDTO usersDTO) {
-        return usersRepository.findById(usersDTO.getId())
-                .map(EntityUser -> {
-                    EntityUser.setFullName(usersDTO.getFullName());
-                    EntityUser.setEmail(usersDTO.getEmail());
-                    EntityUser.setPhoneNumber(usersDTO.getPhoneNumber());
-                    EntityUser.setPassword(usersDTO.getPassword());
-                    usersRepository.save(EntityUser);
-                    return convertUsersModelToDTO(EntityUser);
+        logger.info("Attempting to find User with ID: {}", userId);
+        return usersRepository.findById(userId)
+                .map(UserEntity -> {
+                    UserEntity.setFullName(usersDTO.getFullName());
+                    UserEntity.setEmail(usersDTO.getEmail());
+                    UserEntity.setPhoneNumber(usersDTO.getPhoneNumber());
+                    UserEntity.setPassword(usersDTO.getPassword());
+                    usersRepository.save(UserEntity);
+                    logger.info("User updated successfully: {}", UserEntity);
+                    return convertUsersModelToDTO(UserEntity);
                 })
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + usersDTO.getId()));
+                .orElseThrow(() -> {
+                    logger.error("User with such ID: {} was not found", userId);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "User with such ID was NOT Found: " + userId);
+                });
     }
 
     @Override
     public UsersDTO updatePasswordById(UUID userId, String newPassword) {
+        logger.info("Attempting to find User with ID: {}", userId);
         return usersRepository.findById(userId)
-                .map(EntityUser -> {
-                    EntityUser.setPassword(newPassword);
-                    usersRepository.save(EntityUser);
-                    return convertUsersModelToDTO(EntityUser);
+                .map(UserEntity -> {
+                    UserEntity.setPassword(newPassword);
+                    usersRepository.save(UserEntity);
+                    logger.info("User password updated successfully: {}", UserEntity);
+                    return convertUsersModelToDTO(UserEntity);
                 })
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userId));
+                .orElseThrow(() -> {
+                    logger.error("User with such ID: {} was not found", userId);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "User with such ID was NOT Found: " + userId);
+                });
     }
 
     @Transactional
     @Override
     public ResponseEntity<String> deleteUserById(UUID userId) {
-        usersRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User with such ID was NOT Found" + userId));
+        logger.info("Attempting to find User with ID: {}", userId);
+        Users user = usersRepository.findById(userId)
+                .orElseThrow(() -> {
+                    logger.error("User with such ID: {} was not found", userId);
+                    return new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "User with such ID was NOT Found: " + userId);
+                });
         usersRepository.deleteById(userId);
+        logger.info("User was found and deleted successfully: {}", user);
         return new ResponseEntity<>("User deleted successfully", HttpStatus.ACCEPTED);
     }
 
     @Transactional
     @Override
     public ResponseEntity<String> deleteUserByEmail(String userEmail) {
-        usersRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User with such Email was NOT Found" + userEmail));
-        usersRepository.deleteByEmail(userEmail);
+        logger.info("Attempting to find User with Email: {}", userEmail);
+        Users user = usersRepository.findByEmail(userEmail)
+                .orElseThrow(() -> {
+                    logger.error("User with such Email: {} was not found", userEmail);
+                    return new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "User with such Email was NOT Found: " + userEmail);
+                });
+        usersRepository.delete(user);
+        logger.info("User was found and deleted successfully: {}", user);
         return new ResponseEntity<>("User deleted successfully", HttpStatus.ACCEPTED);
     }
 
     @Transactional
     @Override
     public ResponseEntity<String> deleteUserByFullName(String userFullName) {
-        usersRepository.findByFullName(userFullName)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User with such Full Name was NOT Found" + userFullName));
+        logger.info("Attempting to find User with Name: {}", userFullName);
+        Users user = usersRepository.findByFullName(userFullName)
+                .orElseThrow(() -> {
+                    logger.error("User with such Name: {} was not found", userFullName);
+                    return new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "User with such Full Name was NOT Found: " + userFullName);
+                });
         usersRepository.deleteByFullName(userFullName);
+        logger.info("User was found and deleted successfully: {}", user);
         return new ResponseEntity<>("User deleted successfully", HttpStatus.ACCEPTED);
     }
 }

@@ -30,6 +30,12 @@ public class Account {
     @JsonManagedReference
     private List<Card> cards;
 
+    @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Payment> outgoingPayments;
+
+    @OneToMany(mappedBy = "toAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Payment> incomingPayments;
+
     public Account() {
     }
 
@@ -126,5 +132,20 @@ public class Account {
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", accountName='" + accountName + '\'' +
+                ", accountHolderFullName='" + accountHolderFullName + '\'' +
+                ", balance=" + balance +
+                ", accountType='" + accountType + '\'' +
+                ", createdDate=" + createdDate +
+                ", status='" + status + '\'' +
+                ", currency='" + currency + '\'' +
+                ", \n \t\t\tcards=" + cards +
+                '}';
     }
 }

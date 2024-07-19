@@ -16,7 +16,7 @@ public interface AccountService {
 
     List<AccountDTO> getAllUserAccountsByUserId(UUID userId);
 
-    List<AccountDTO> getAllAccountByHolderFullName(String accountHolderFullName);
+    List<AccountDTO> getAllAccountsByHolderFullName(String accountHolderFullName);
 
     BigDecimal getBalanceByAccountId(UUID accountId);
 

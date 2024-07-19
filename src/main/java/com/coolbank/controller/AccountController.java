@@ -21,7 +21,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/register/{userId}")
+    @PostMapping("/register/user/{userId}")
     public ResponseEntity<AccountDTO> createAccount(@PathVariable UUID userId,
                                                     @RequestBody AccountDTO accountDTO) {
         logger.debug("Received POST request to create Account for User with ID: {}, Account: {}",
@@ -38,11 +38,11 @@ public class AccountController {
 
 
     @GetMapping("/username/{accountHolderFullName}")
-    public ResponseEntity<List<AccountDTO>> getAllAccountByHolderFullName(@PathVariable
-                                                                          String accountHolderFullName) {
+    public ResponseEntity<List<AccountDTO>> getAllAccountsByHolderFullName(@PathVariable
+                                                                           String accountHolderFullName) {
         logger.debug("Received GET request to get All User Accounts by HOLDER FULL NAME: {}",
                 accountHolderFullName);
-        return ResponseEntity.ok(accountService.getAllAccountByHolderFullName(accountHolderFullName));
+        return ResponseEntity.ok(accountService.getAllAccountsByHolderFullName(accountHolderFullName));
     }
 
     @GetMapping("/balance/{accountId}")
@@ -75,7 +75,7 @@ public class AccountController {
         return ResponseEntity.ok(accountDTOS);
     }
 
-    @PatchMapping("/refill/{accountId}/{amount}")
+    @PatchMapping("/refill/id/{accountId}/amount/{amount}")
     public ResponseEntity<AccountDTO> refillAccount(@PathVariable UUID accountId,
                                                     @PathVariable BigDecimal amount) {
         logger.debug("Received PATCH request to refill Account with ID: {}, in AMOUNT OF: {}",
@@ -84,7 +84,7 @@ public class AccountController {
         return ResponseEntity.ok(accountDTO);
     }
 
-    @PutMapping("/update/{accountId}")
+    @PutMapping("/update/id/{accountId}")
     public ResponseEntity<AccountDTO> updateAccountById(@PathVariable UUID accountId,
                                                         @RequestBody AccountDTO accountDTO) {
         logger.debug("Received PUT request to update Account with ID: {}, UPDATE TO: {}",
@@ -93,7 +93,7 @@ public class AccountController {
         return ResponseEntity.ok(ResponseAccountDTO);
     }
 
-    @PatchMapping("/update/{accountId}/status/{status}")
+    @PatchMapping("/update/id/{accountId}/status/{status}")
     public ResponseEntity<AccountDTO> updateAccountStatusById(@PathVariable UUID accountId,
                                                               @PathVariable String status) {
         logger.debug("Received PATCH request to update Account Status with ID: {}, TO: {}",
@@ -102,7 +102,7 @@ public class AccountController {
         return ResponseEntity.ok(accountDTO);
     }
 
-    @PatchMapping("/update/{accountId}/balance/{newBalance}")
+    @PatchMapping("/update/id/{accountId}/balance/{newBalance}")
     public ResponseEntity<AccountDTO> updateAccountBalanceById(@PathVariable UUID accountId,
                                                                @PathVariable BigDecimal newBalance) {
         logger.debug("Received PATCH request to update Account Balance with ID: {}, WITH New Balance: {}",
@@ -111,7 +111,7 @@ public class AccountController {
         return ResponseEntity.ok(accountDTO);
     }
 
-    @PatchMapping("/update/{accountName}/{balance}")
+    @PatchMapping("/update/name/{accountName}/{balance}")
     public ResponseEntity<AccountDTO> updateAccountBalanceByAccountName(@PathVariable String accountName,
                                                                         @PathVariable BigDecimal balance) {
         logger.debug("Received PATCH request to update Account Balance with ID: {}, WITH New Balance: {}",
