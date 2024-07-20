@@ -43,7 +43,6 @@ public class UsersServiceImpl implements UsersService {
         users.setEmail(usersDTO.getEmail());
         users.setPassword(usersDTO.getPassword());
         users.setPhoneNumber(usersDTO.getPhoneNumber());
-        users.setId(usersDTO.getId());
         users.setCreatedDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         users.setStatus("ACTIVE");
         return users;
