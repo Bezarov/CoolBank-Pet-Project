@@ -1,4 +1,4 @@
--- UsersDTO
+-- Users
 INSERT INTO users (id, created_date, email, full_name, password, phone_number, status) VALUES
 ('1e8c6265-1c1d-4e89-8d5a-9f776de0842e', FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'john.doe@example.com', 'John Doe', 'password', '1234567890', 'ACTIVE'),
 ('480f46eb-a046-4ef8-b5fb-c02d96c89264', FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'jane.smith@example.com', 'Jane Smith', 'password', '0987654321', 'ACTIVE'),

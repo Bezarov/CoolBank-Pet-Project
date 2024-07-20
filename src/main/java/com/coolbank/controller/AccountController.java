@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/account")
+@RequestMapping("/accounts")
 public class AccountController {
     private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
     private final AccountServiceImpl accountService;
@@ -21,7 +21,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/register/user/{userId}")
+    @PostMapping("/user/{userId}")
     public ResponseEntity<AccountDTO> createAccount(@PathVariable UUID userId,
                                                     @RequestBody AccountDTO accountDTO) {
         logger.debug("Received POST request to create Account for User with ID: {}, Account: {}",
@@ -29,7 +29,7 @@ public class AccountController {
         return ResponseEntity.ok(accountService.createAccount(userId, accountDTO));
     }
 
-    @GetMapping("/id/{accountId}")
+    @GetMapping("/by-id/{accountId}")
     public ResponseEntity<AccountDTO> getAccountById(@PathVariable UUID accountId) {
         logger.debug("Received GET request to get Account by ID: {}", accountId);
         AccountDTO accountDTO = accountService.getAccountById(accountId);
@@ -37,7 +37,7 @@ public class AccountController {
     }
 
 
-    @GetMapping("/username/{accountHolderFullName}")
+    @GetMapping("/by-holder-full-name/{accountHolderFullName}")
     public ResponseEntity<List<AccountDTO>> getAllAccountsByHolderFullName(@PathVariable
                                                                            String accountHolderFullName) {
         logger.debug("Received GET request to get All User Accounts by HOLDER FULL NAME: {}",
@@ -45,46 +45,46 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAllAccountsByHolderFullName(accountHolderFullName));
     }
 
-    @GetMapping("/balance/{accountId}")
+    @GetMapping("/by-id/{accountId}/balance")
     public ResponseEntity<BigDecimal> getBalanceByAccountId(@PathVariable UUID accountId) {
         logger.debug("Received GET request to get Account balance by ACCOUNT ID: {}", accountId);
         BigDecimal bigDecimal = accountService.getBalanceByAccountId(accountId);
         return ResponseEntity.ok(bigDecimal);
     }
 
-    @GetMapping("/name/{accountName}")
+    @GetMapping("/by-account-name/{accountName}")
     public ResponseEntity<AccountDTO> getAccountByAccountName(@PathVariable String accountName) {
         logger.debug("Received GET request to get Account by ACCOUNT NAME: {}", accountName);
         AccountDTO accountDTO = accountService.getAccountByAccountName(accountName);
         return ResponseEntity.ok(accountDTO);
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/by-user-id/{userId}")
     public ResponseEntity<List<AccountDTO>> getAllUserAccountsByUserId(@PathVariable UUID userId) {
         logger.debug("Received GET request to get All User Accounts by USER ID: {}", userId);
         List<AccountDTO> accountDTOS = accountService.getAllUserAccountsByUserId(userId);
         return ResponseEntity.ok(accountDTOS);
     }
 
-    @GetMapping("/user/{userId}/status/{accountStatus}")
-    public ResponseEntity<List<AccountDTO>> getAccountsByStatus(@PathVariable UUID userId,
-                                                                @PathVariable String accountStatus) {
+    @GetMapping("/by-user-id/{userId}/status")
+    public ResponseEntity<List<AccountDTO>> getAccountsByStatus(
+            @PathVariable UUID userId, @RequestParam(name = "status") String accountStatus) {
         logger.debug("Received GET request to get All User (USER ID: {}), Accounts by ACCOUNT STATUS: {}",
                 userId, accountStatus);
         List<AccountDTO> accountDTOS = accountService.getAllAccountsByStatus(userId, accountStatus);
         return ResponseEntity.ok(accountDTOS);
     }
 
-    @PatchMapping("/refill/id/{accountId}/amount/{amount}")
+    @PatchMapping("/by-account-id/{accountId}/refill")
     public ResponseEntity<AccountDTO> refillAccount(@PathVariable UUID accountId,
-                                                    @PathVariable BigDecimal amount) {
+                                                    @RequestParam(name = "amount") BigDecimal amount) {
         logger.debug("Received PATCH request to refill Account with ID: {}, in AMOUNT OF: {}",
                 accountId, amount);
         AccountDTO accountDTO = accountService.refillAccount(accountId, amount);
         return ResponseEntity.ok(accountDTO);
     }
 
-    @PutMapping("/update/id/{accountId}")
+    @PutMapping("/by-account-id/{accountId}")
     public ResponseEntity<AccountDTO> updateAccountById(@PathVariable UUID accountId,
                                                         @RequestBody AccountDTO accountDTO) {
         logger.debug("Received PUT request to update Account with ID: {}, UPDATE TO: {}",
@@ -93,48 +93,48 @@ public class AccountController {
         return ResponseEntity.ok(ResponseAccountDTO);
     }
 
-    @PatchMapping("/update/id/{accountId}/status/{status}")
+    @PatchMapping("/by-account-id/{accountId}/status")
     public ResponseEntity<AccountDTO> updateAccountStatusById(@PathVariable UUID accountId,
-                                                              @PathVariable String status) {
+                                                              @RequestParam String status) {
         logger.debug("Received PATCH request to update Account Status with ID: {}, TO: {}",
                 accountId, status);
         AccountDTO accountDTO = accountService.updateAccountStatusById(accountId, status);
         return ResponseEntity.ok(accountDTO);
     }
 
-    @PatchMapping("/update/id/{accountId}/balance/{newBalance}")
+    @PatchMapping("/by-account-id/{accountId}/balance")
     public ResponseEntity<AccountDTO> updateAccountBalanceById(@PathVariable UUID accountId,
-                                                               @PathVariable BigDecimal newBalance) {
+                                                               @RequestParam BigDecimal balance) {
         logger.debug("Received PATCH request to update Account Balance with ID: {}, WITH New Balance: {}",
-                accountId, newBalance);
-        AccountDTO accountDTO = accountService.updateAccountBalanceById(accountId, newBalance);
+                accountId, balance);
+        AccountDTO accountDTO = accountService.updateAccountBalanceById(accountId, balance);
         return ResponseEntity.ok(accountDTO);
     }
 
-    @PatchMapping("/update/name/{accountName}/{balance}")
+    @PatchMapping("/by-account-name/{accountName}/balance")
     public ResponseEntity<AccountDTO> updateAccountBalanceByAccountName(@PathVariable String accountName,
-                                                                        @PathVariable BigDecimal balance) {
+                                                                        @RequestParam BigDecimal balance) {
         logger.debug("Received PATCH request to update Account Balance with ID: {}, WITH New Balance: {}",
                 accountName, balance);
         AccountDTO accountDTO = accountService.updateAccountBalanceByAccountName(accountName, balance);
         return ResponseEntity.ok(accountDTO);
     }
 
-    @DeleteMapping("/delete/id/{accountId}")
+    @DeleteMapping("/by-account-id/{accountId}")
     public ResponseEntity<String> deleteAccountByAccountId(@PathVariable UUID accountId) {
         logger.debug("Received DELETE request to remove Account with ID: {} ", accountId);
         return accountService.deleteAccountByAccountId(accountId);
     }
 
-    @DeleteMapping("/delete/name/{accountName}")
+    @DeleteMapping("/by-account-name/{accountName}")
     public ResponseEntity<String> deleteAccountByAccountName(@PathVariable String accountName) {
         logger.debug("Received DELETE request to remove Account with Name: {} ", accountName);
         return accountService.deleteAccountByAccountName(accountName);
     }
 
-    @DeleteMapping("/delete/user/{userId}")
+    @DeleteMapping("/by-user-id/{userId}")
     public ResponseEntity<String> deleteAllUserAccountsByUserId(@PathVariable UUID userId) {
-        logger.debug("Received DELETE request to remove All User Accounts with ID: {} ", userId);
+        logger.debug("Received DELETE request to remove All User Accounts with User ID: {} ", userId);
         return accountService.deleteAllUserAccountsByUserId(userId);
     }
 }

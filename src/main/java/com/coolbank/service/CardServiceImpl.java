@@ -1,6 +1,7 @@
 package com.coolbank.service;
 
 import com.coolbank.dto.CardDTO;
+import com.coolbank.model.Account;
 import com.coolbank.model.Card;
 import com.coolbank.model.Users;
 import com.coolbank.repository.AccountRepository;
@@ -76,13 +77,15 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardDTO createCard(UUID accountId, String cardHolderFullName) {
+    public CardDTO createCard(UUID accountId) {
         logger.info("Attempting to find Account with ID: {}", accountId);
-        accountRepository.findById(accountId).orElseThrow(() -> {
-            logger.error("Account with such ID: {}, was NOT Found", accountId);
-            return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Account with such ID was NOT Found: " + accountId);
-        });
+        String cardHolderFullName = accountRepository.findById(accountId)
+                .map(Account::getAccountHolderFullName)
+                .orElseThrow(() -> {
+                    logger.error("Account with such ID: {}, was NOT Found", accountId);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "Account with such ID was NOT Found: " + accountId);
+                });
 
         logger.info("Attempting to Generate Card");
         Card card = cardRepository.save(cardGenerator(accountId, cardHolderFullName));
