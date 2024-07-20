@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/card")
+@RequestMapping("/cards")
 public class CardController {
     private static final Logger logger = LoggerFactory.getLogger(CardController.class);
     private final CardServiceImpl cardService;
@@ -20,104 +20,102 @@ public class CardController {
         this.cardService = cardService;
     }
 
-    @PostMapping("/register/account/{accountId}/username/{cardHolderFullName}")
-    public ResponseEntity<CardDTO> createCard(@PathVariable UUID accountId,
-                                              @PathVariable String cardHolderFullName) {
-        logger.debug("Received POST request to create Card for Account with ID: {}," +
-                " And Card Holder Name: {}", accountId, cardHolderFullName);
-        return ResponseEntity.ok(cardService.createCard(accountId, cardHolderFullName));
+    @PostMapping("/by-account-id/{accountId}")
+    public ResponseEntity<CardDTO> createCard(@PathVariable UUID accountId) {
+        logger.debug("Received POST request to create Card for Account with ID: {}", accountId);
+        return ResponseEntity.ok(cardService.createCard(accountId));
     }
 
-    @GetMapping("/id/{cardId}")
+    @GetMapping("/by-card-id/{cardId}")
     public ResponseEntity<CardDTO> getCardById(@PathVariable UUID cardId) {
         logger.debug("Received GET request to get Card by ID: {}", cardId);
         CardDTO cardDTO = cardService.getCardById(cardId);
         return ResponseEntity.ok(cardDTO);
     }
 
-    @GetMapping("/number/{cardNumber}")
+    @GetMapping("/by-card-number/{cardNumber}")
     public ResponseEntity<CardDTO> getCardByCardNumber(@PathVariable String cardNumber) {
         logger.debug("Received GET request to get Card by Card Number: {}", cardNumber);
         CardDTO cardDTO = cardService.getCardByCardNumber(cardNumber);
         return ResponseEntity.ok(cardDTO);
     }
 
-    @GetMapping("/holdername/{cardHolderFullName}")
+    @GetMapping("/by-card-user-name/{cardHolderFullName}")
     public ResponseEntity<List<CardDTO>> getCardsByCardHolderFullName(@PathVariable String cardHolderFullName) {
         logger.debug("Received GET request to get All Cards by Card Holder Name: {}", cardHolderFullName);
         List<CardDTO> cards = cardService.getCardsByCardHolderFullName(cardHolderFullName);
         return ResponseEntity.ok(cards);
     }
 
-    @GetMapping("/account/{accountId}")
+    @GetMapping("/by-account-id/{accountId}")
     public ResponseEntity<List<CardDTO>> getAllAccountCardsByAccountId(@PathVariable UUID accountId) {
         logger.debug("Received GET request to get All Cards by Account ID: {}", accountId);
         List<CardDTO> cardDTOS = cardService.getAllAccountCardsByAccountId(accountId);
         return ResponseEntity.ok(cardDTOS);
     }
 
-    @GetMapping("/holderid/{holderId}")
+    @GetMapping("/by-user-id/{holderId}")
     public ResponseEntity<List<CardDTO>> getAllUserCardsByCardHolderId(@PathVariable UUID holderId) {
         logger.debug("Received GET request to get All Cards by Card Holder ID: {}", holderId);
         List<CardDTO> cardDTOS = cardService.getAllUserCardsByCardHolderId(holderId);
         return ResponseEntity.ok(cardDTOS);
     }
 
-    @GetMapping("/holderid/{holderId}/status/{status}")
+    @GetMapping("/by-user-id/{holderId}/status")
     public ResponseEntity<List<CardDTO>> getAllUserCardsByStatus(@PathVariable UUID holderId,
-                                                                 @PathVariable String status) {
+                                                                 @RequestParam String status) {
         logger.debug("Received GET request to get All Cards by Card Holder ID: {}," +
                 " with Status: {}", holderId, status);
         List<CardDTO> cardDTOS = cardService.getAllUserCardsByStatus(holderId, status);
         return ResponseEntity.ok(cardDTOS);
     }
 
-    @GetMapping("/expired/holderid/{holderId}")
+    @GetMapping("/expired/by-holder-id/{holderId}")
     public ResponseEntity<List<CardDTO>> getAllExpiredCard(@PathVariable UUID holderId) {
         logger.debug("Received GET request to get All Expired Cards by Card Holder ID: {}", holderId);
         List<CardDTO> cardDTOS = cardService.getAllExpiredCards(holderId);
         return ResponseEntity.ok(cardDTOS);
     }
 
-    @GetMapping("/active/holderid/{holderId}")
+    @GetMapping("/active/by-holder-id/{holderId}")
     public ResponseEntity<List<CardDTO>> getAllActiveCards(@PathVariable UUID holderId) {
         logger.debug("Received GET request to get All Active Cards by Card Holder ID: {}", holderId);
         List<CardDTO> cardDTOS = cardService.getAllActiveCards(holderId);
         return ResponseEntity.ok(cardDTOS);
     }
 
-    @PatchMapping("/id/{cardId}/status/{status}")
+    @PatchMapping("/by-card-id{cardId}/status")
     public ResponseEntity<CardDTO> updateCardStatusById(@PathVariable UUID cardId,
-                                                        @PathVariable String status) {
+                                                        @RequestParam String status) {
         logger.debug("Received PATCH request to update Status of Card by Card ID: {}," +
                 " with Status: {}", cardId, status);
         CardDTO cardDTO = cardService.updateCardStatusById(cardId, status);
         return ResponseEntity.ok(cardDTO);
     }
 
-    @PatchMapping("/number/{cardNumber}/status/{status}")
+    @PatchMapping("/by-card-number/{cardNumber}/status")
     public ResponseEntity<CardDTO> updateCardStatusByCardNumber(@PathVariable String cardNumber,
-                                                                @PathVariable String status) {
+                                                                @RequestParam String status) {
         logger.debug("Received PATCH request to update Status of Card by " +
                 "Card Card Number: {}, with Status: {}", cardNumber, status);
         CardDTO cardDTO = cardService.updateCardStatusByCardNumber(cardNumber, status);
         return ResponseEntity.ok(cardDTO);
     }
 
-    @DeleteMapping("/id/{cardId}")
+    @DeleteMapping("/by-card-id/{cardId}")
     public ResponseEntity<String> deleteCardById(@PathVariable UUID cardId) {
         logger.debug("Received DELETE request to remove Card with ID: {}", cardId);
         return cardService.deleteCardById(cardId);
     }
 
-    @DeleteMapping("/accountid/{accountId}")
+    @DeleteMapping("/by-account-id/{accountId}")
     public ResponseEntity<String> deleteAllAccountCardsByAccountId(@PathVariable UUID accountId) {
         logger.debug("Received DELETE request to remove All Account Cards" +
                 " by Account ID: {}", accountId);
         return cardService.deleteAllAccountCardsByAccountId(accountId);
     }
 
-    @DeleteMapping("/holderid/{cardHolderUUID}")
+    @DeleteMapping("/by-user-id/{cardHolderUUID}")
     public ResponseEntity<String> deleteAllUsersCardsByCardHolderUUID(@PathVariable UUID cardHolderUUID) {
         logger.debug("Received DELETE request to remove All User Cards" +
                 " by Holder ID: {}", cardHolderUUID);
