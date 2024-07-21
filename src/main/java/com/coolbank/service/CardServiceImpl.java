@@ -185,7 +185,7 @@ public class CardServiceImpl implements CardService {
 
         logger.info("Attempting to find All Cards Linked to User with" +
                 " Card Status: {}", status);
-        List<Card> cards = cardRepository.findAllByStatus(status);
+        List<Card> cards = cardRepository.findAllByCardHolderUUIDAndStatus(holderId, status);
         logger.info("Cards was found and received to the Controller: {}", cards);
         return cards.stream()
                 .map(this::convertCardModelToDTO)

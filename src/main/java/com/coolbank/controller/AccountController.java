@@ -29,7 +29,7 @@ public class AccountController {
         return ResponseEntity.ok(accountService.createAccount(userId, accountDTO));
     }
 
-    @GetMapping("/by-id/{accountId}")
+    @GetMapping("/by-account-id/{accountId}")
     public ResponseEntity<AccountDTO> getAccountById(@PathVariable UUID accountId) {
         logger.debug("Received GET request to get Account by ID: {}", accountId);
         AccountDTO accountDTO = accountService.getAccountById(accountId);
@@ -37,7 +37,7 @@ public class AccountController {
     }
 
 
-    @GetMapping("/by-holder-full-name/{accountHolderFullName}")
+    @GetMapping("/by-holder-name/{accountHolderFullName}")
     public ResponseEntity<List<AccountDTO>> getAllAccountsByHolderFullName(@PathVariable
                                                                            String accountHolderFullName) {
         logger.debug("Received GET request to get All User Accounts by HOLDER FULL NAME: {}",
@@ -45,7 +45,7 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAllAccountsByHolderFullName(accountHolderFullName));
     }
 
-    @GetMapping("/by-id/{accountId}/balance")
+    @GetMapping("/by-account-id/{accountId}/balance")
     public ResponseEntity<BigDecimal> getBalanceByAccountId(@PathVariable UUID accountId) {
         logger.debug("Received GET request to get Account balance by ACCOUNT ID: {}", accountId);
         BigDecimal bigDecimal = accountService.getBalanceByAccountId(accountId);

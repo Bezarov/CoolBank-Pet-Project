@@ -32,7 +32,7 @@ INSERT INTO account (balance, created_date, id, users_id, account_holder_full_na
 -- Cards for Alice Jones accounts
 INSERT INTO card (expiration_date, account_id, id, card_holder_full_name, card_holderuuid, card_number, cvv, status) VALUES
 ('2025-12-31', 'e7b9ea34-9bd3-4625-81d4-ac53fa843686', '6e0b7527-d115-4b5d-8615-010774db74f1', 'Alice Jones', 'd4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', '6666 2222 3333 9999', '421', 'ACTIVE'),
-('2026-09-30', '9f205c92-b6ae-438e-a5fd-ce2e815d3f7e', '723bd28a-c991-4dce-895c-7a6253b3e731', 'Alice Jones', 'd4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', '7777 6666 7777 8888', '123', 'ACTIVE');
+('2026-09-30', '9f205c92-b6ae-438e-a5fd-ce2e815d3f7e', '723bd28a-c991-4dce-895c-7a6253b3e731', 'Alice Jones', 'd4b7b4f3-9d8a-4f9e-8e2c-9f776de0843e', '7777 6666 7777 9999', '123', 'ACTIVE');
 -- Payments
 INSERT INTO payment (amount, payment_date, from_account_id, id, to_account_id, description, payment_type, status) VALUES
 (200.00, FORMATDATETIME(CURRENT_TIMESTAMP, 'yyyy-MM-dd HH:mm:ss'), 'c09f380e-08cd-4a6f-a01f-e373950f995f', 'f3371556-c57d-4f04-83e4-575120ce8c1d', 'b33ecf44-1071-43b1-8c28-67e274cccd60', 'Transfer to Jane', 'TRANSFER', 'COMPLETED'),

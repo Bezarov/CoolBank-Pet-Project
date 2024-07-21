@@ -18,5 +18,5 @@ public interface CardRepository extends JpaRepository<Card, UUID> {
 
     List<Card> findAllByCardHolderUUID(UUID holderId);
 
-    List<Card> findAllByStatus(String status);
+    List<Card> findAllByCardHolderUUIDAndStatus(UUID holderId, String status);
 }
