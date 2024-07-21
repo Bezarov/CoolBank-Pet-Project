@@ -40,7 +40,7 @@ public class CardController {
         return ResponseEntity.ok(cardDTO);
     }
 
-    @GetMapping("/by-card-user-name/{cardHolderFullName}")
+    @GetMapping("/by-user-name/{cardHolderFullName}")
     public ResponseEntity<List<CardDTO>> getCardsByCardHolderFullName(@PathVariable String cardHolderFullName) {
         logger.debug("Received GET request to get All Cards by Card Holder Name: {}", cardHolderFullName);
         List<CardDTO> cards = cardService.getCardsByCardHolderFullName(cardHolderFullName);
@@ -70,21 +70,21 @@ public class CardController {
         return ResponseEntity.ok(cardDTOS);
     }
 
-    @GetMapping("/expired/by-holder-id/{holderId}")
+    @GetMapping("/expired/by-user-id/{holderId}")
     public ResponseEntity<List<CardDTO>> getAllExpiredCard(@PathVariable UUID holderId) {
         logger.debug("Received GET request to get All Expired Cards by Card Holder ID: {}", holderId);
         List<CardDTO> cardDTOS = cardService.getAllExpiredCards(holderId);
         return ResponseEntity.ok(cardDTOS);
     }
 
-    @GetMapping("/active/by-holder-id/{holderId}")
+    @GetMapping("/active/by-user-id/{holderId}")
     public ResponseEntity<List<CardDTO>> getAllActiveCards(@PathVariable UUID holderId) {
         logger.debug("Received GET request to get All Active Cards by Card Holder ID: {}", holderId);
         List<CardDTO> cardDTOS = cardService.getAllActiveCards(holderId);
         return ResponseEntity.ok(cardDTOS);
     }
 
-    @PatchMapping("/by-card-id{cardId}/status")
+    @PatchMapping("/by-card-id/{cardId}/status")
     public ResponseEntity<CardDTO> updateCardStatusById(@PathVariable UUID cardId,
                                                         @RequestParam String status) {
         logger.debug("Received PATCH request to update Status of Card by Card ID: {}," +

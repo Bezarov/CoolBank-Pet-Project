@@ -33,7 +33,7 @@ public class PaymentController {
             @RequestParam(name = "from-card-number") String fromCardNumber,
             @RequestParam(name = "to-card-number") String toCardNumber,
             @RequestParam(name = "amount") BigDecimal amount) {
-        logger.debug("Received POST request for Transfer from Card to Card From Card: {}," +
+        logger.debug("Received POST request to Card to Card Transfer: From Card: {}," +
                 " To Card: {}, in AMOUNT OF: {}", fromCardNumber, toCardNumber, amount);
         return ResponseEntity.ok(paymentService.createPaymentByCards(fromCardNumber, toCardNumber, amount));
     }

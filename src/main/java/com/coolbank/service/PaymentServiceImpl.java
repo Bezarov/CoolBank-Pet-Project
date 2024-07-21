@@ -151,7 +151,7 @@ public class PaymentServiceImpl implements PaymentService {
         paymentDTO.setToAccount(accountToAccount.getId());
         paymentDTO.setAmount(amount);
         paymentDTO.setPaymentType("Card to Card Transfer");
-        paymentDTO.setDescription("From Card: " + fromCardNumber + " to Card: " + toCardNumber);
+        paymentDTO.setDescription("Transfer from Card: " + fromCardNumber + " to Card: " + toCardNumber);
         Payment payment = paymentRepository.save(convertPaymentDTOToModel(paymentDTO));
         logger.info("Card to Card transaction ended successfully: {}", payment);
         return convertPaymentModelToDTO(payment);
