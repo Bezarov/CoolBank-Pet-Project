@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,10 +20,13 @@ import java.util.UUID;
 @Service
 public class UsersServiceImpl implements UsersService {
     private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class);
+    private final PasswordEncoder passwordEncoder;
+
     private final UsersRepository usersRepository;
 
     @Autowired
-    public UsersServiceImpl(UsersRepository usersRepository) {
+    public UsersServiceImpl(PasswordEncoder passwordEncoder, UsersRepository usersRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.usersRepository = usersRepository;
     }
 
@@ -41,7 +45,7 @@ public class UsersServiceImpl implements UsersService {
         Users users = new Users();
         users.setFullName(usersDTO.getFullName());
         users.setEmail(usersDTO.getEmail());
-        users.setPassword(usersDTO.getPassword());
+        users.setPassword(passwordEncoder.encode(usersDTO.getPassword()));
         users.setPhoneNumber(usersDTO.getPhoneNumber());
         users.setCreatedDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         users.setStatus("ACTIVE");
@@ -52,7 +56,7 @@ public class UsersServiceImpl implements UsersService {
     public UsersDTO createUser(UsersDTO usersDTO) {
         logger.info("Attempting to find User with Email: {}", usersDTO.getEmail());
         usersRepository.findByEmail(usersDTO.getEmail())
-                .ifPresent(EntityUser -> {
+                .ifPresent(UserEntity -> {
                     logger.error("User with such Email: {}, already exists", usersDTO.getEmail());
                     throw new ResponseStatusException(HttpStatus.FOUND,
                             "User with such Email ALREADY EXIST: " + usersDTO.getEmail());
@@ -130,7 +134,7 @@ public class UsersServiceImpl implements UsersService {
                     UserEntity.setFullName(usersDTO.getFullName());
                     UserEntity.setEmail(usersDTO.getEmail());
                     UserEntity.setPhoneNumber(usersDTO.getPhoneNumber());
-                    UserEntity.setPassword(usersDTO.getPassword());
+                    UserEntity.setPassword(passwordEncoder.encode(usersDTO.getPassword()));
                     usersRepository.save(UserEntity);
                     logger.info("User updated successfully: {}", UserEntity);
                     return convertUsersModelToDTO(UserEntity);
@@ -147,7 +151,7 @@ public class UsersServiceImpl implements UsersService {
         logger.info("Attempting to find User with ID: {}", userId);
         return usersRepository.findById(userId)
                 .map(UserEntity -> {
-                    UserEntity.setPassword(newPassword);
+                    UserEntity.setPassword(passwordEncoder.encode(newPassword));
                     usersRepository.save(UserEntity);
                     logger.info("User password updated successfully: {}", UserEntity);
                     return convertUsersModelToDTO(UserEntity);
