@@ -22,17 +22,17 @@ public class AuthController {
     @PostMapping("/user")
     public ResponseEntity<String> authenticateUser(@RequestBody UserAuthRequest userAuthRequest) {
         logger.debug("Received POST request to Authenticate User with Users Credentials: {}", userAuthRequest);
-        String token = authService.authenticateUser(userAuthRequest.getEmail(), userAuthRequest.getPassword());
-        return ResponseEntity.ok("Authorization successfully!" +
-                "\n Please use this JWT token for further requests: " + new AuthResponse(token));
+        String token = authService.authenticateUser(userAuthRequest.email(), userAuthRequest.password());
+        return ResponseEntity.ok("Authentication successfully!" +
+                "\nPlease use this JWT Token for further Access \n" + new AuthResponse(token));
     }
 
     @PostMapping("/service")
     public ResponseEntity<AuthResponse> authenticateService(@RequestBody ServiceAuthRequest serviceAuthRequest) {
         logger.debug("Received POST request to Authenticate Service with " +
                 "Service Credentials: {}", serviceAuthRequest);
-        String token = authService.authenticateService(serviceAuthRequest.getServiceId(),
-                serviceAuthRequest.getServiceSecret());
+        String token = authService.authenticateService(serviceAuthRequest.serviceName(),
+                serviceAuthRequest.serviceId(), serviceAuthRequest.serviceSecret());
         return ResponseEntity.ok(new AuthResponse(token));
     }
 }

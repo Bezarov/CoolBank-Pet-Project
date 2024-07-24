@@ -2,6 +2,7 @@ package com.coolbank.service;
 
 import com.coolbank.dto.AccountDTO;
 import com.coolbank.model.Account;
+import com.coolbank.model.Users;
 import com.coolbank.repository.AccountRepository;
 import com.coolbank.repository.CardRepository;
 import com.coolbank.repository.UsersRepository;
@@ -54,7 +55,8 @@ public class AccountServiceImpl implements AccountService {
         Account account = new Account();
         account.setAccountName(accountDTO.getAccountName());
         account.setBalance(accountDTO.getBalance());
-        account.setAccountHolderFullName(accountDTO.getAccountHolderFullName());
+        account.setAccountHolderFullName(usersRepository.findById(usersId).map(Users::getFullName)
+                .orElseThrow(() -> new RuntimeException("User ID Not Found in Database")));
         account.setStatus(accountDTO.getStatus());
         account.setAccountType(accountDTO.getAccountType());
         account.setCreatedDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
@@ -201,7 +203,6 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findById(accountId)
                 .map(AccountEntity -> {
                     AccountEntity.setAccountName(accountDTO.getAccountName());
-                    AccountEntity.setAccountHolderFullName(accountDTO.getAccountHolderFullName());
                     AccountEntity.setStatus(accountDTO.getStatus());
                     AccountEntity.setAccountType(accountDTO.getAccountType());
                     AccountEntity.setCurrency(accountDTO.getCurrency());
