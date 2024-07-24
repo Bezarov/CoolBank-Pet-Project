@@ -1,13 +1,9 @@
 package com.coolbank.model;
 
-public class AuthResponse {
-    private String token;
+public record AuthResponse(String token) {
 
-    public AuthResponse(String token) {
-        this.token = token;
-    }
-
-    public String getToken() {
-        return token;
+    @Override
+    public String toString() {
+        return "Token=" + token;
     }
 }
