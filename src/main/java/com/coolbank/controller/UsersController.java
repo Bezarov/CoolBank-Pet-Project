@@ -24,7 +24,8 @@ public class UsersController {
     @PostMapping
     public ResponseEntity<UsersDTO> createUser(@RequestBody UsersDTO usersDTO) {
         logger.debug("Received POST request to create User: {}", usersDTO);
-        return ResponseEntity.ok(usersService.createUser(usersDTO));
+        UsersDTO responseUsersDTO = usersService.createUser(usersDTO);
+        return ResponseEntity.ok(responseUsersDTO);
     }
 
     @GetMapping("/by-id/{userId}")

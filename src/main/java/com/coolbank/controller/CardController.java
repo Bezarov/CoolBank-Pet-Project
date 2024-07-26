@@ -23,7 +23,8 @@ public class CardController {
     @PostMapping("/by-account-id/{accountId}")
     public ResponseEntity<CardDTO> createCard(@PathVariable UUID accountId) {
         logger.debug("Received POST request to create Card for Account with ID: {}", accountId);
-        return ResponseEntity.ok(cardService.createCard(accountId));
+        CardDTO cardDTO = cardService.createCard(accountId);
+        return ResponseEntity.ok(cardDTO);
     }
 
     @GetMapping("/by-card-id/{cardId}")
@@ -43,8 +44,8 @@ public class CardController {
     @GetMapping("/by-user-name/{cardHolderFullName}")
     public ResponseEntity<List<CardDTO>> getCardsByCardHolderFullName(@PathVariable String cardHolderFullName) {
         logger.debug("Received GET request to get All Cards by Card Holder Name: {}", cardHolderFullName);
-        List<CardDTO> cards = cardService.getCardsByCardHolderFullName(cardHolderFullName);
-        return ResponseEntity.ok(cards);
+        List<CardDTO> cardDTOS = cardService.getCardsByCardHolderFullName(cardHolderFullName);
+        return ResponseEntity.ok(cardDTOS);
     }
 
     @GetMapping("/by-account-id/{accountId}")

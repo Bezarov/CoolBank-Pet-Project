@@ -26,7 +26,8 @@ public class AccountController {
                                                     @RequestBody AccountDTO accountDTO) {
         logger.debug("Received POST request to create Account for User with ID: {}, Account: {}",
                 userId, accountDTO);
-        return ResponseEntity.ok(accountService.createAccount(userId, accountDTO));
+        AccountDTO responseAccountDTO = accountService.createAccount(userId, accountDTO);
+        return ResponseEntity.ok(responseAccountDTO);
     }
 
     @GetMapping("/by-account-id/{accountId}")
@@ -42,7 +43,8 @@ public class AccountController {
                                                                            String accountHolderFullName) {
         logger.debug("Received GET request to get All User Accounts by HOLDER FULL NAME: {}",
                 accountHolderFullName);
-        return ResponseEntity.ok(accountService.getAllAccountsByHolderFullName(accountHolderFullName));
+        List<AccountDTO> accountDTOS = accountService.getAllAccountsByHolderFullName(accountHolderFullName);
+        return ResponseEntity.ok(accountDTOS);
     }
 
     @GetMapping("/by-account-id/{accountId}/balance")

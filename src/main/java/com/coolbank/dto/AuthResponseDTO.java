@@ -1,6 +1,6 @@
-package com.coolbank.model;
+package com.coolbank.dto;
 
-public record AuthResponse(String token) {
+public record AuthResponseDTO(String token) {
 
     @Override
     public String toString() {
