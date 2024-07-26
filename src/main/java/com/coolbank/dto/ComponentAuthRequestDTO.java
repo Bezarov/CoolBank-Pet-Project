@@ -1,9 +1,9 @@
-package com.coolbank.model;
+package com.coolbank.dto;
 
-public record ServiceAuthRequest(String serviceName, String serviceId, String serviceSecret) {
+public record ComponentAuthRequestDTO(String serviceName, String serviceId, String serviceSecret) {
     @Override
     public String toString() {
-        return "ServiceAuthRequest{" +
+        return "ComponentAuthRequestDTO{" +
                 "serviceName='" + serviceName + '\'' +
                 ", serviceId='" + serviceId + '\'' +
                 ", serviceSecret='" + serviceSecret + '\'' +

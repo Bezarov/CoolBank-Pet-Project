@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
             logger.error("Authentication failed for User with Email: {} Password {} Error: {}",
                     email, password, error);
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-                    "Authentication failed \nInvalid Email or Password", error);
+                    "Authentication failed \nInvalid Email or Password");
         }
     }
 

@@ -1,8 +1,8 @@
 package com.coolbank.controller;
 
-import com.coolbank.model.AuthResponse;
-import com.coolbank.model.ServiceAuthRequest;
-import com.coolbank.model.UserAuthRequest;
+import com.coolbank.dto.AuthResponseDTO;
+import com.coolbank.dto.ComponentAuthRequestDTO;
+import com.coolbank.dto.UserAuthRequestDTO;
 import com.coolbank.service.AuthServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,19 +20,20 @@ public class AuthController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<String> authenticateUser(@RequestBody UserAuthRequest userAuthRequest) {
-        logger.debug("Received POST request to Authenticate User with Users Credentials: {}", userAuthRequest);
-        String token = authService.authenticateUser(userAuthRequest.email(), userAuthRequest.password());
+    public ResponseEntity<String> authenticateUser(@RequestBody UserAuthRequestDTO userAuthRequestDTO) {
+        logger.debug("Received POST request to Authenticate User with Users Credentials: {}", userAuthRequestDTO);
+        String token = authService.authenticateUser(userAuthRequestDTO.email(), userAuthRequestDTO.password());
         return ResponseEntity.ok("Authentication successfully!" +
-                "\nPlease use this JWT Token for further Access \n" + new AuthResponse(token));
+                "\nPlease use this JWT Token for further Access \n" + new AuthResponseDTO(token));
     }
 
     @PostMapping("/service")
-    public ResponseEntity<AuthResponse> authenticateService(@RequestBody ServiceAuthRequest serviceAuthRequest) {
+    public ResponseEntity<AuthResponseDTO> authenticateService(
+            @RequestBody ComponentAuthRequestDTO componentAuthRequestDTO) {
         logger.debug("Received POST request to Authenticate Service with " +
-                "Service Credentials: {}", serviceAuthRequest);
-        String token = authService.authenticateService(serviceAuthRequest.serviceName(),
-                serviceAuthRequest.serviceId(), serviceAuthRequest.serviceSecret());
-        return ResponseEntity.ok(new AuthResponse(token));
+                "Service Credentials: {}", componentAuthRequestDTO);
+        String token = authService.authenticateService(componentAuthRequestDTO.serviceName(),
+                componentAuthRequestDTO.serviceId(), componentAuthRequestDTO.serviceSecret());
+        return ResponseEntity.ok(new AuthResponseDTO(token));
     }
 }

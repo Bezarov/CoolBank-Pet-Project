@@ -1,10 +1,10 @@
-package com.coolbank.model;
+package com.coolbank.dto;
 
-public record UserAuthRequest(String email, String password) {
+public record UserAuthRequestDTO(String email, String password) {
 
     @Override
     public String toString() {
-        return "UserAuthRequest{" +
+        return "UserAuthRequestDTO{" +
                 "email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';
