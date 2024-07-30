@@ -1,7 +1,7 @@
 package com.coolbank.controller;
 
 import com.coolbank.dto.UsersDTO;
-import com.coolbank.service.UsersServiceImpl;
+import com.coolbank.service.UsersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +15,9 @@ import java.util.UUID;
 public class UsersController {
     private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
 
-    private final UsersServiceImpl usersService;
+    private final UsersService usersService;
 
-    public UsersController(UsersServiceImpl usersService) {
+    public UsersController(UsersService usersService) {
         this.usersService = usersService;
     }
 

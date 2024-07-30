@@ -1,58 +1,61 @@
 package com.coolbank.service;
 
+import com.coolbank.dto.AuthRequestDTO;
 import com.coolbank.security.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AuthServiceImpl implements AuthService {
     private final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
-    private final AuthenticationManager authenticationManager;
+    private final AuthDetailsService authDetailsService;
     private final JwtUtil jwtUtil;
 
     @Autowired
-    public AuthServiceImpl(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
-        this.authenticationManager = authenticationManager;
+    public AuthServiceImpl(AuthDetailsService authDetailsService, JwtUtil jwtUtil) {
+        this.authDetailsService = authDetailsService;
         this.jwtUtil = jwtUtil;
     }
 
     @Override
-    public String authenticateUser(String email, String password) {
+    public String authenticateUser(AuthRequestDTO authRequestDTO) {
         try {
-            logger.info("Authenticating user with email: {}", email);
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(email, password)
-            );
-            logger.info("Authentication successfully for Email: {} and Password: {}", email, password);
-
-            logger.info("Setting up Authentication context");
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            logger.info("Received UserDetails: {} to JWT Utils", userDetails);
-            String token = jwtUtil.userGenerateToken(userDetails);
+            logger.info("Authenticating user with email: {}", authRequestDTO.principal());
+            authDetailsService.authenticateUser(authRequestDTO);
+            logger.info("Authentication successfully for user with email: {}", authRequestDTO.principal());
+            logger.info("Received Authentication Request to JWT Utils: {}", authRequestDTO);
+            String token = jwtUtil.userTokenGenerator(authRequestDTO.principal().toString());
             logger.info("Generated JWT Token: {}", token);
             return token;
         } catch (AuthenticationException error) {
-            logger.error("Authentication failed for User with Email: {} Password {} Error: {}",
-                    email, password, error);
+            logger.error("Authentication failed for User with Email: {} Password: {}",
+                    authRequestDTO.principal(), authRequestDTO.credentials());
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                     "Authentication failed \nInvalid Email or Password");
         }
     }
 
     @Override
-    public String authenticateService(String serviceName, String serviceId, String serviceSecret) {
-        return null;
+    public String authenticateComponent(AuthRequestDTO authRequestDTO) {
+        try {
+            logger.info("Authenticating component with ID: {}", authRequestDTO.principal());
+            authDetailsService.authenticateComponent(authRequestDTO);
+            logger.info("Authentication successfully for Component with ID: {}", authRequestDTO.principal());
+
+            logger.info("Received Authentication Request to JWT Utils: {}", authRequestDTO);
+            String token = jwtUtil.componentTokenGenerator(authRequestDTO.principal().toString());
+            logger.info("Generated JWT Token: {}", token);
+            return token;
+        } catch (AuthenticationException error) {
+            logger.error("Authentication failed for Component with ID: {} Secret: {}",
+                    authRequestDTO, authRequestDTO);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "Authentication failed \nInvalid Component ID or Secret");
+        }
     }
 }

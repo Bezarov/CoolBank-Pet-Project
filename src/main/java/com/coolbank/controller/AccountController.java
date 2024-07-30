@@ -1,7 +1,7 @@
 package com.coolbank.controller;
 
 import com.coolbank.dto.AccountDTO;
-import com.coolbank.service.AccountServiceImpl;
+import com.coolbank.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +15,9 @@ import java.util.UUID;
 @RequestMapping("/accounts")
 public class AccountController {
     private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
-    private final AccountServiceImpl accountService;
+    private final AccountService accountService;
 
-    public AccountController(AccountServiceImpl accountService) {
+    public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
 

@@ -1,7 +1,10 @@
 package com.coolbank.service;
 
-public interface AuthService {
-    String authenticateUser(String email, String password);
 
-    String authenticateService(String serviceName, String serviceId, String serviceSecret);
+import com.coolbank.dto.AuthRequestDTO;
+
+public interface AuthService {
+    String authenticateUser(AuthRequestDTO authRequestDTO);
+
+    String authenticateComponent(AuthRequestDTO authRequestDTO);
 }

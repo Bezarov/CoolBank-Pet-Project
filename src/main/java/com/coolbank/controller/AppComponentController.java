@@ -1,7 +1,7 @@
 package com.coolbank.controller;
 
 import com.coolbank.model.AppComponent;
-import com.coolbank.service.AppComponentServiceImpl;
+import com.coolbank.service.AppComponentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +10,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/components")
 public class AppComponentController {
-    private final AppComponentServiceImpl appComponentService;
+    private final AppComponentService appComponentService;
 
-    public AppComponentController(AppComponentServiceImpl appComponentService) {
+    public AppComponentController(AppComponentService appComponentService) {
         this.appComponentService = appComponentService;
     }
 
