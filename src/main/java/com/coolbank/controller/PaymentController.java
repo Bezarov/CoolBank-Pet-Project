@@ -1,7 +1,7 @@
 package com.coolbank.controller;
 
 import com.coolbank.dto.PaymentDTO;
-import com.coolbank.service.PaymentServiceImpl;
+import com.coolbank.service.PaymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +16,9 @@ import java.util.UUID;
 @RequestMapping("/payments")
 public class PaymentController {
     private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
-    private final PaymentServiceImpl paymentService;
+    private final PaymentService paymentService;
 
-    public PaymentController(PaymentServiceImpl paymentService) {
+    public PaymentController(PaymentService paymentService) {
         this.paymentService = paymentService;
     }
 

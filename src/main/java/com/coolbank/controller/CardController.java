@@ -1,7 +1,7 @@
 package com.coolbank.controller;
 
 import com.coolbank.dto.CardDTO;
-import com.coolbank.service.CardServiceImpl;
+import com.coolbank.service.CardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +14,9 @@ import java.util.UUID;
 @RequestMapping("/cards")
 public class CardController {
     private static final Logger logger = LoggerFactory.getLogger(CardController.class);
-    private final CardServiceImpl cardService;
+    private final CardService cardService;
 
-    public CardController(CardServiceImpl cardService) {
+    public CardController(CardService cardService) {
         this.cardService = cardService;
     }
 
