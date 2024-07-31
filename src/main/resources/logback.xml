@@ -6,9 +6,9 @@
         </encoder>
     </appender>
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>src/main/java/com/coolbank/log/coolbank-app.log</file>
+        <file>src/main/java/com/coolbank/log/current-app.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/app-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <fileNamePattern>src/main/java/com/coolbank/log/history-app-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -19,9 +19,9 @@
         </encoder>
     </appender>
     <root level="info">
-        <appender-ref ref="TERMINAL" />
-        <appender-ref ref="FILE" />
+        <appender-ref ref="TERMINAL"/>
+        <appender-ref ref="FILE"/>
     </root>
-    <logger name="org.springframework" level="warn" />
-    <logger name="com.coolbank" level="debug" />
+    <logger name="org.springframework" level="warn"/>
+    <logger name="com.coolbank" level="debug"/>
 </configuration>
