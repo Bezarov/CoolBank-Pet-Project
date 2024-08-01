@@ -1,6 +1,6 @@
 package com.coolbank.service;
 
-import com.coolbank.config.ComponentConfig;
+import com.coolbank.config.ComponentConfigReader;
 import com.coolbank.model.AppComponent;
 import com.coolbank.repository.AppComponentRepository;
 import com.coolbank.security.SecurityConfig;
@@ -27,31 +27,30 @@ public class AppComponentServiceImpl implements AppComponentService {
 
     @Override
     public AppComponent registerComponent(AppComponent appComponent) {
-        logger.info("Attempting to find Component with ID: {}", appComponent.getComponentId());
+        logger.info("Trying to find Component with ID: {}", appComponent.getComponentId());
         appComponentRepository.findById(appComponent.getComponentId())
                 .ifPresent(AppComponentEntity -> {
-                    logger.error("Component with such ID: {}, already registered", appComponent.getComponentId());
+                    logger.error("Component with such ID already registered: {}", appComponent.getComponentId());
                     throw new ResponseStatusException(HttpStatus.FOUND,
-                            "Component with such ID ALREADY REGISTERED: " + appComponent.getComponentId());
+                            "Component with such ID: " + appComponent.getComponentId() + " already registered");
                 });
+        logger.info("Component ID is unique");
 
-        logger.info("Read/Refresh component-config.yml file");
-        List<AppComponent> components = ComponentConfig.readConfig().getComponents();
+        List<AppComponent> components = ComponentConfigReader.readConfig().getComponents();
 
-        logger.info("Attempting to Compare incoming Component credentials with" +
-                " configured Component credentials in component-config.yaml");
+        logger.info("Comparing received data from request with configured data in component-config.yaml");
         AppComponent matchedIncomingComponentInComponentConfig = components.stream()
                 .filter(component -> component.getComponentName().equals(appComponent.getComponentName()) &&
                         component.getComponentId().toString().equals(appComponent.getComponentId().toString()) &&
                         component.getComponentSecret().equals(appComponent.getComponentSecret()))
                 .findFirst()
                 .orElseThrow(() -> {
-                    logger.error("Incoming credential was NOT FOUND in component-config.yml: {}", appComponent);
+                    logger.error("Received data was not found in component-config.yml: {}", appComponent);
                     return new ResponseStatusException(HttpStatus.NOT_FOUND,
                             "Invalid Component Credentials: " + appComponent);
                 });
 
-        logger.info("Encrypting component secret before save in DB");
+        logger.info("Encrypting received component secret before save it in DB");
         matchedIncomingComponentInComponentConfig.setComponentSecret(security.passwordEncoder()
                 .encode(matchedIncomingComponentInComponentConfig.getComponentSecret()));
 
@@ -61,31 +60,31 @@ public class AppComponentServiceImpl implements AppComponentService {
 
     @Override
     public AppComponent getComponentById(UUID componentId) {
-        logger.info("Attempting to find Component with ID: {}", componentId);
+        logger.info("Trying to find Component with ID: {}", componentId);
         return appComponentRepository.findById(componentId)
                 .map(AppComponentEntity -> {
                     logger.info("Component was found and received to the Controller: {}", AppComponentEntity);
                     return AppComponentEntity;
                 })
                 .orElseThrow(() -> {
-                    logger.error("Component with such ID: {} was not found", componentId);
+                    logger.error("Component with such ID was not found: {}", componentId);
                     return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Component with such ID was NOT Found: " + componentId);
+                            "Component with such ID:" + componentId + " was not found");
                 });
     }
 
     @Override
     public AppComponent getComponentByName(String componentName) {
-        logger.info("Attempting to find Component with Name: {}", componentName);
+        logger.info("Trying to find Component with name: {}", componentName);
         return appComponentRepository.findServiceByComponentName(componentName)
                 .map(AppComponentEntity -> {
                     logger.info("Component was found and received to the Controller: {}", AppComponentEntity);
                     return AppComponentEntity;
                 })
                 .orElseThrow(() -> {
-                    logger.error("Component with such Name: {} was not found", componentName);
+                    logger.error("Component with such name was not found: {}", componentName);
                     return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Component with such Name was NOT Found: " + componentName);
+                            "Component with such name: " + componentName + " was not found");
                 });
     }
 }

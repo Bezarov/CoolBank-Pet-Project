@@ -28,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
             logger.info("Authenticating user with email: {}", authRequestDTO.principal());
             authDetailsService.authenticateUser(authRequestDTO);
             logger.info("Authentication successfully for user with email: {}", authRequestDTO.principal());
-            logger.info("Received Authentication Request to JWT Utils: {}", authRequestDTO);
+            logger.info("Trying to generate user token for credentials: {}", authRequestDTO);
             String token = jwtUtil.userTokenGenerator(authRequestDTO.principal().toString());
             logger.info("Generated JWT Token: {}", token);
             return token;
@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
             authDetailsService.authenticateComponent(authRequestDTO);
             logger.info("Authentication successfully for Component with ID: {}", authRequestDTO.principal());
 
-            logger.info("Received Authentication Request to JWT Utils: {}", authRequestDTO);
+            logger.info("Trying to generate component token for credentials: {}", authRequestDTO);
             String token = jwtUtil.componentTokenGenerator(authRequestDTO.principal().toString());
             logger.info("Generated JWT Token: {}", token);
             return token;

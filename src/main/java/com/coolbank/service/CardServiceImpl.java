@@ -3,7 +3,6 @@ package com.coolbank.service;
 import com.coolbank.dto.CardDTO;
 import com.coolbank.model.Account;
 import com.coolbank.model.Card;
-import com.coolbank.model.Users;
 import com.coolbank.repository.AccountRepository;
 import com.coolbank.repository.CardRepository;
 import com.coolbank.repository.UsersRepository;
@@ -51,14 +50,13 @@ public class CardServiceImpl implements CardService {
         return cardDTO;
     }
 
-    private Card cardGenerator(UUID accountId, String cardHolderFullName) {
+    private Card cardGenerator(Account account) {
         Card card = new Card();
-        card.setAccount(accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Account ID Not Found in Database")));
-        card.setCardHolderUUID(usersRepository.findByFullName(cardHolderFullName).map(Users::getId)
-                .orElseThrow(() -> new RuntimeException("User Full Name Not Found in Database")));
+        card.setAccount(account);
+        card.setCardHolderUUID(account.getUser().getId());
+        logger.debug("Generating card number");
         card.setCardNumber(cardNumberGenerator());
-        card.setCardHolderFullName(cardHolderFullName);
+        card.setCardHolderFullName(account.getAccountHolderFullName());
         card.setExpirationDate(LocalDate.now().plusYears(random.nextInt(5) + 1));
         card.setCvv(String.format("%03d", random.nextInt(1000)));
         card.setStatus("ACTIVE");
@@ -73,66 +71,66 @@ public class CardServiceImpl implements CardService {
                 cardNumber.append(" ");
             }
         }
+        logger.debug("Card number generated successfully: {}", cardNumber);
         return cardNumber.toString();
     }
 
     @Override
     public CardDTO createCard(UUID accountId) {
-        logger.info("Attempting to find Account with ID: {}", accountId);
-        String cardHolderFullName = accountRepository.findById(accountId)
-                .map(Account::getAccountHolderFullName)
+        logger.info("Trying to find Account with ID: {}", accountId);
+        Account accountEntity = accountRepository.findById(accountId)
                 .orElseThrow(() -> {
-                    logger.error("Account with such ID: {}, was NOT Found", accountId);
+                    logger.error("Account with such ID was not found: {}, ", accountId);
                     return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Account with such ID was NOT Found: " + accountId);
+                            "Account with such ID: " + accountId + " was not found");
                 });
 
-        logger.info("Attempting to Generate Card");
-        Card card = cardRepository.save(cardGenerator(accountId, cardHolderFullName));
-        logger.info("Card created successfully: {}", card);
+        logger.debug("Generating Card");
+        Card card = cardRepository.save(cardGenerator(accountEntity));
+        logger.info("Card generated successfully: {}", card);
         return convertCardModelToDTO(card);
     }
 
     @Override
     public CardDTO getCardById(UUID cardId) {
-        logger.info("Attempting to find Card with ID: {}", cardId);
+        logger.info("Trying to find Card with ID: {}", cardId);
         return cardRepository.findById(cardId)
                 .map(CardEntity -> {
                     logger.info("Card was found and received to the Controller: {}", CardEntity);
                     return convertCardModelToDTO(CardEntity);
                 })
                 .orElseThrow(() -> {
-                    logger.error("Card with such ID: {} was not found", cardId);
+                    logger.error("Card with such ID was not found: {}", cardId);
                     return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Card with such ID was NOT Found: " + cardId);
+                            "Card with such ID: " + cardId + " was not found");
                 });
     }
 
     @Override
     public CardDTO getCardByCardNumber(String cardNumber) {
-        logger.info("Attempting to find Card with Card Number: {}", cardNumber);
+        logger.info("Trying to find Card with Card Number: {}", cardNumber);
         return cardRepository.findByCardNumber(cardNumber)
                 .map(CardEntity -> {
                     logger.info("Card was found and received to the Controller: {}", CardEntity);
                     return convertCardModelToDTO(CardEntity);
                 })
                 .orElseThrow(() -> {
-                    logger.error("Card with such Card Number: {} was not found", cardNumber);
+                    logger.error("Card with such Card Number was not found: {}", cardNumber);
                     return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Card with such Card Number was NOT Found: " + cardNumber);
+                            "Card with such Card Number: " + cardNumber + " was not found");
                 });
     }
 
     @Override
     public List<CardDTO> getCardsByCardHolderFullName(String cardHolderFullName) {
-        logger.info("Attempting to find User with Name: {}", cardHolderFullName);
+        logger.info("Trying to find User with Name: {}", cardHolderFullName);
         usersRepository.findByFullName(cardHolderFullName).orElseThrow(() -> {
-            logger.error("User with such Name: {} was not found", cardHolderFullName);
+            logger.error("User with such Name was not found: {}", cardHolderFullName);
             return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "User with such Full Name was NOT Found: " + cardHolderFullName);
+                    "User with such Full Name: " + cardHolderFullName + " was not found");
         });
 
-        logger.info("Attempting to find All Cards with User Name: {}", cardHolderFullName);
+        logger.info("Trying to find all Cards linked to User Name: {}", cardHolderFullName);
         List<Card> cards = cardRepository.findAllByCardHolderFullName(cardHolderFullName);
         logger.info("Cards was found and received to the Controller: {}", cards);
         return cards.stream()
@@ -142,14 +140,14 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public List<CardDTO> getAllAccountCardsByAccountId(UUID accountId) {
-        logger.info("Attempting to find Account with ID: {}", accountId);
+        logger.info("Trying to find Account with ID: {}", accountId);
         accountRepository.findById(accountId).orElseThrow(() -> {
-            logger.error("Account with such ID: {} was not found", accountId);
+            logger.error("Account with such ID was not found: {}", accountId);
             return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Account with such ID was NOT Found: " + accountId);
+                    "Account with such ID: " + accountId + " was not found");
         });
 
-        logger.info("Attempting to find All Cards Linked to Account with ID: {}", accountId);
+        logger.info("Trying to find all Cards linked to Account with ID: {}", accountId);
         List<Card> cards = cardRepository.findAllByAccountId(accountId);
         logger.info("Cards was found and received to the Controller: {}", cards);
         return cards.stream()
@@ -159,14 +157,14 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public List<CardDTO> getAllUserCardsByCardHolderId(UUID holderId) {
-        logger.info("Attempting to find User with ID: {}", holderId);
+        logger.info("Trying to find User with ID: {}", holderId);
         usersRepository.findById(holderId).orElseThrow(() -> {
-            logger.error("User with such ID: {} was not found", holderId);
+            logger.error("User with such ID was not found: {}", holderId);
             return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "User with such ID was NOT Found: " + holderId);
+                    "User with such ID: " + holderId + " was not found");
         });
 
-        logger.info("Attempting to find All Cards Linked to User with ID: {}", holderId);
+        logger.info("Trying to find all Cards linked to User with ID: {}", holderId);
         List<Card> cards = cardRepository.findAllByCardHolderUUID(holderId);
         logger.info("Cards was found and received to the Controller: {}", cards);
         return cards.stream()
@@ -176,14 +174,14 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public List<CardDTO> getAllUserCardsByStatus(UUID holderId, String status) {
-        logger.info("Attempting to find User with ID: {}", holderId);
+        logger.info("Trying to find User with ID: {}", holderId);
         usersRepository.findById(holderId).orElseThrow(() -> {
-            logger.error("User with such ID: {} was not found", holderId);
+            logger.error("User with such ID was not found: {}", holderId);
             return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "User with such ID was NOT Found: " + holderId);
+                    "User with such ID: " + holderId + " was not found");
         });
 
-        logger.info("Attempting to find All Cards Linked to User with" +
+        logger.info("Trying to find all Cards linked to User by" +
                 " Card Status: {}", status);
         List<Card> cards = cardRepository.findAllByCardHolderUUIDAndStatus(holderId, status);
         logger.info("Cards was found and received to the Controller: {}", cards);
@@ -194,14 +192,14 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public List<CardDTO> getAllExpiredCards(UUID holderId) {
-        logger.info("Attempting to find User with ID: {}", holderId);
+        logger.info("Trying to find User with ID: {}", holderId);
         usersRepository.findById(holderId).orElseThrow(() -> {
-            logger.error("User with such ID: {} was not found", holderId);
+            logger.error("User with such ID was not found: {}", holderId);
             return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "User with such ID was NOT Found: " + holderId);
+                    "User with such ID: " + holderId + " was not found");
         });
 
-        logger.info("Attempting to find All Expired Cards Linked to User with ID: {}", holderId);
+        logger.info("Trying to find all expired Cards linked to User with ID: {}", holderId);
         List<Card> cards = cardRepository.findAllByCardHolderUUID(holderId);
         return cards.stream()
                 .filter(card -> card.getExpirationDate().isBefore(LocalDate.now()))
@@ -214,13 +212,13 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public List<CardDTO> getAllActiveCards(UUID holderId) {
-        logger.info("Attempting to find User with ID: {}", holderId);
+        logger.info("Trying to find User with ID: {}", holderId);
         usersRepository.findById(holderId).orElseThrow(() -> {
-            logger.error("User with such ID: {} was not found", holderId);
+            logger.error("User with such ID was not found: {}", holderId);
             return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "User with such ID was NOT Found: " + holderId);
+                    "User with such ID: " + holderId + " was not found");
         });
-        logger.info("Attempting to find All Active Cards Linked to User with ID: {}", holderId);
+        logger.info("Trying to find all active Cards linked to User with ID: {}", holderId);
         List<Card> cards = cardRepository.findAllByCardHolderUUID(holderId);
         return cards.stream()
                 .filter(card -> card.getExpirationDate().isAfter(LocalDate.now()))
@@ -233,7 +231,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public CardDTO updateCardStatusById(UUID cardId, String status) {
-        logger.info("Attempting to find Card with ID: {}", cardId);
+        logger.info("Trying to find Card with ID: {}", cardId);
         return cardRepository.findById(cardId)
                 .map(CardEntity -> {
                     CardEntity.setStatus(status);
@@ -242,15 +240,15 @@ public class CardServiceImpl implements CardService {
                     return convertCardModelToDTO(CardEntity);
                 })
                 .orElseThrow(() -> {
-                    logger.error("Card with such ID: {} was not found", cardId);
+                    logger.error("Card with such ID was not found: {}", cardId);
                     return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Card with such ID was NOT Found: " + cardId);
+                            "Card with such ID: " + cardId + " was not found");
                 });
     }
 
     @Override
     public CardDTO updateCardStatusByCardNumber(String cardNumber, String status) {
-        logger.info("Attempting to find Card with Card Number: {}", cardNumber);
+        logger.info("Trying to find Card with Card Number: {}", cardNumber);
         return cardRepository.findByCardNumber(cardNumber)
                 .map(CardEntity -> {
                     CardEntity.setStatus(status);
@@ -259,16 +257,16 @@ public class CardServiceImpl implements CardService {
                     return convertCardModelToDTO(CardEntity);
                 })
                 .orElseThrow(() -> {
-                    logger.error("Card with such Card Number: {} was not found", cardNumber);
+                    logger.error("Card with such Card Number was not found: {}", cardNumber);
                     return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Card with such Card Number was NOT Found: " + cardNumber);
+                            "Card with such Card Number: " + cardNumber + " was not found");
                 });
     }
 
     @Transactional
     @Override
     public ResponseEntity<String> deleteCardById(UUID cardId) {
-        logger.info("Attempting to find Card with ID: {}", cardId);
+        logger.info("Trying to find Card with ID: {}", cardId);
         cardRepository.findById(cardId)
                 .map(CardEntity -> {
                     CardEntity.setStatus("DEACTIVATED");
@@ -276,9 +274,9 @@ public class CardServiceImpl implements CardService {
                     return cardRepository.save(CardEntity);
                 })
                 .orElseThrow(() -> {
-                    logger.error("Card with such ID: {} was not found", cardId);
+                    logger.error("Card with such ID was not found: {}", cardId);
                     return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Card with such ID was NOT Found: " + cardId);
+                            "Card with such ID: " + cardId + " was not found");
                 });
         return new ResponseEntity<>("Card deleted successfully", HttpStatus.ACCEPTED);
     }
@@ -286,14 +284,14 @@ public class CardServiceImpl implements CardService {
     @Transactional
     @Override
     public ResponseEntity<String> deleteAllAccountCardsByAccountId(UUID accountId) {
-        logger.info("Attempting to find Account with ID: {}", accountId);
+        logger.info("Trying to find Account with ID: {}", accountId);
         accountRepository.findById(accountId).orElseThrow(() -> {
-            logger.error("Account with such ID: {} was not found", accountId);
+            logger.error("Account with such ID was not found: {}", accountId);
             return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Account with such ID was NOT Found: " + accountId);
+                    "Account with such ID: " + accountId + " was not found");
         });
 
-        logger.info("Attempting to find Account Cards with Account ID: {}", accountId);
+        logger.info("Trying to find Account Cards with Account ID: {}", accountId);
         cardRepository.findAllByAccountId(accountId)
                 .forEach(CardEntity -> {
                     CardEntity.setStatus("DEACTIVATED");
@@ -305,14 +303,14 @@ public class CardServiceImpl implements CardService {
     @Transactional
     @Override
     public ResponseEntity<String> deleteAllUsersCardsByCardHolderUUID(UUID cardHolderUUID) {
-        logger.info("Attempting to find User with ID: {}", cardHolderUUID);
+        logger.info("Trying to find User with ID: {}", cardHolderUUID);
         usersRepository.findById(cardHolderUUID).orElseThrow(() -> {
-            logger.error("User with such ID: {} was not found", cardHolderUUID);
+            logger.error("User with such ID was not found: {}", cardHolderUUID);
             return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "User with such ID was NOT Found: " + cardHolderUUID);
+                    "User with such ID: " + cardHolderUUID + " was not found");
         });
 
-        logger.info("Attempting to find User Cards with User ID: {}", cardHolderUUID);
+        logger.info("Trying to find User Cards with User ID: {}", cardHolderUUID);
         cardRepository.findAllByCardHolderUUID(cardHolderUUID)
                 .forEach(CardEntity -> {
                     CardEntity.setStatus("DEACTIVATED");

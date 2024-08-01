@@ -2,9 +2,15 @@ package com.coolbank.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,33 +18,49 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    private final String USER_SECRET_KEY = "WakandaBank";
-    private final String COMPONENT_SECRET_KEY = "BankWakanda";
-
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
+    private SecretKey userSecretKey;
+    private SecretKey componentSecretKey;
     private final String TOKEN_TYPE_CLAIM = "tokenType";
     private final String USER_TOKEN_TYPE = "user";
     private final String COMPONENT_TOKEN_TYPE = "component";
+    private String USER_SECRET_KEY_BASE64 = "WakandaBank";
+    private String COMPONENT_SECRET_KEY_BASE64 = "BankWakanda";
+    private final String SALT = "WAKANDAWAKANDAWAKANDAAAABANK!";
+
+    @PostConstruct
+    public void init() {
+        USER_SECRET_KEY_BASE64 = USER_SECRET_KEY_BASE64 + SALT;
+        COMPONENT_SECRET_KEY_BASE64 = COMPONENT_SECRET_KEY_BASE64 + SALT;
+        userSecretKey = Keys.hmacShaKeyFor(Base64.getEncoder().encode(USER_SECRET_KEY_BASE64.getBytes()));
+        componentSecretKey = Keys.hmacShaKeyFor(Base64.getEncoder().encode(COMPONENT_SECRET_KEY_BASE64.getBytes()));
+        logger.debug("Initial keys for user and component was successfully encrypted and assigned");
+    }
 
     public String userTokenGenerator(String userEmail) {
         Map<String, Object> claims = new HashMap<>();
+        logger.debug("Setting token type as users");
         claims.put(TOKEN_TYPE_CLAIM, USER_TOKEN_TYPE);
-        return doGenerateToken(claims, userEmail, USER_SECRET_KEY);
+        logger.debug("Generating token");
+        return doGenerateToken(claims, userEmail, userSecretKey);
     }
 
     public String componentTokenGenerator(String serviceId) {
         Map<String, Object> claims = new HashMap<>();
+        logger.debug("Setting token type as component");
         claims.put(TOKEN_TYPE_CLAIM, COMPONENT_TOKEN_TYPE);
-        return doGenerateToken(claims, serviceId, COMPONENT_SECRET_KEY);
+        logger.debug("Generating token");
+        return doGenerateToken(claims, serviceId, componentSecretKey);
     }
 
-    private String doGenerateToken(Map<String, Object> claims, String subject, String secretKey) {
+    private String doGenerateToken(Map<String, Object> claims, String subject, SecretKey secretKey) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                // 10 hours
+                //10 Hours
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .signWith(secretKey)
                 .compact();
     }
 
@@ -56,21 +78,34 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        String key = determineKeyForToken(token);
-        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+        SecretKey key = determineKeyForToken(token);
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    private String determineKeyForToken(String token) {
-        String tokenType = Jwts.parser()
-                .setSigningKey(USER_SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody()
-                .get(TOKEN_TYPE_CLAIM, String.class);
+    private SecretKey determineKeyForToken(String token) {
+        Claims claims = null;
+        SecretKey key = null;
+        try {
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(userSecretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            key = userSecretKey;
+        } catch (SignatureException exception) {
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(componentSecretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            key = componentSecretKey;
+        }
 
+        String tokenType = claims.get(TOKEN_TYPE_CLAIM, String.class);
         if (COMPONENT_TOKEN_TYPE.equals(tokenType)) {
-            return COMPONENT_SECRET_KEY;
+            return componentSecretKey;
         } else {
-            return USER_SECRET_KEY;
+            return userSecretKey;
         }
     }
 
@@ -87,12 +122,28 @@ public class JwtUtil {
     }
 
     public Boolean isUserToken(String token) {
-        return USER_TOKEN_TYPE.equals(Jwts.parser().setSigningKey(
-                USER_SECRET_KEY).parseClaimsJws(token).getBody().get(TOKEN_TYPE_CLAIM, String.class));
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(userSecretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return USER_TOKEN_TYPE.equals(claims.get(TOKEN_TYPE_CLAIM, String.class));
+        } catch (SignatureException exception) {
+            return false;
+        }
     }
 
     public Boolean isComponentToken(String token) {
-        return COMPONENT_TOKEN_TYPE.equals(Jwts.parser().setSigningKey(
-                COMPONENT_SECRET_KEY).parseClaimsJws(token).getBody().get(TOKEN_TYPE_CLAIM, String.class));
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(componentSecretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return COMPONENT_TOKEN_TYPE.equals(claims.get(TOKEN_TYPE_CLAIM, String.class));
+        } catch (SignatureException exception) {
+            return false;
+        }
     }
 }
