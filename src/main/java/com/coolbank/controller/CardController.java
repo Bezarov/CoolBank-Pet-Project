@@ -22,106 +22,121 @@ public class CardController {
 
     @PostMapping("/by-account-id/{accountId}")
     public ResponseEntity<CardDTO> createCard(@PathVariable UUID accountId) {
-        logger.debug("Received POST request to create Card for Account with ID: {}", accountId);
-        CardDTO cardDTO = cardService.createCard(accountId);
-        return ResponseEntity.ok(cardDTO);
+        logger.info("Received POST request to create Card for Account with ID: {}", accountId);
+        CardDTO responseCardDTO = cardService.createCard(accountId);
+        logger.debug("Request was successfully processed and response was sent: {}", responseCardDTO);
+        return ResponseEntity.ok(responseCardDTO);
     }
 
     @GetMapping("/by-card-id/{cardId}")
     public ResponseEntity<CardDTO> getCardById(@PathVariable UUID cardId) {
-        logger.debug("Received GET request to get Card by ID: {}", cardId);
-        CardDTO cardDTO = cardService.getCardById(cardId);
-        return ResponseEntity.ok(cardDTO);
+        logger.info("Received GET request to get Card by ID: {}", cardId);
+        CardDTO responseCardDTO = cardService.getCardById(cardId);
+        logger.debug("Request was successfully processed and response was sent: {}", responseCardDTO);
+        return ResponseEntity.ok(responseCardDTO);
     }
 
     @GetMapping("/by-card-number/{cardNumber}")
     public ResponseEntity<CardDTO> getCardByCardNumber(@PathVariable String cardNumber) {
-        logger.debug("Received GET request to get Card by Card Number: {}", cardNumber);
-        CardDTO cardDTO = cardService.getCardByCardNumber(cardNumber);
-        return ResponseEntity.ok(cardDTO);
+        logger.info("Received GET request to get Card by Card Number: {}", cardNumber);
+        CardDTO responseCardDTO = cardService.getCardByCardNumber(cardNumber);
+        logger.debug("Request was successfully processed and response was sent: {}", responseCardDTO);
+        return ResponseEntity.ok(responseCardDTO);
     }
 
     @GetMapping("/by-user-name/{cardHolderFullName}")
     public ResponseEntity<List<CardDTO>> getCardsByCardHolderFullName(@PathVariable String cardHolderFullName) {
-        logger.debug("Received GET request to get All Cards by Card Holder Name: {}", cardHolderFullName);
-        List<CardDTO> cardDTOS = cardService.getCardsByCardHolderFullName(cardHolderFullName);
-        return ResponseEntity.ok(cardDTOS);
+        logger.info("Received GET request to get All Cards by Card Holder Name: {}", cardHolderFullName);
+        List<CardDTO> responseCardDTOS = cardService.getCardsByCardHolderFullName(cardHolderFullName);
+        logger.debug("Request was successfully processed and response was sent: {}", responseCardDTOS);
+        return ResponseEntity.ok(responseCardDTOS);
     }
 
     @GetMapping("/by-account-id/{accountId}")
     public ResponseEntity<List<CardDTO>> getAllAccountCardsByAccountId(@PathVariable UUID accountId) {
-        logger.debug("Received GET request to get All Cards by Account ID: {}", accountId);
-        List<CardDTO> cardDTOS = cardService.getAllAccountCardsByAccountId(accountId);
-        return ResponseEntity.ok(cardDTOS);
+        logger.info("Received GET request to get All Cards by Account ID: {}", accountId);
+        List<CardDTO> responseCardDTO = cardService.getAllAccountCardsByAccountId(accountId);
+        logger.debug("Request was successfully processed and response was sent: {}", responseCardDTO);
+        return ResponseEntity.ok(responseCardDTO);
     }
 
     @GetMapping("/by-user-id/{holderId}")
     public ResponseEntity<List<CardDTO>> getAllUserCardsByCardHolderId(@PathVariable UUID holderId) {
-        logger.debug("Received GET request to get All Cards by Card Holder ID: {}", holderId);
-        List<CardDTO> cardDTOS = cardService.getAllUserCardsByCardHolderId(holderId);
-        return ResponseEntity.ok(cardDTOS);
+        logger.info("Received GET request to get All Cards by Card Holder ID: {}", holderId);
+        List<CardDTO> responseCardDTOS = cardService.getAllUserCardsByCardHolderId(holderId);
+        logger.debug("Request was successfully processed and response was sent: {}", responseCardDTOS);
+        return ResponseEntity.ok(responseCardDTOS);
     }
 
     @GetMapping("/by-user-id/{holderId}/status")
     public ResponseEntity<List<CardDTO>> getAllUserCardsByStatus(@PathVariable UUID holderId,
                                                                  @RequestParam String status) {
-        logger.debug("Received GET request to get All Cards by Card Holder ID: {}," +
+        logger.info("Received GET request to get All Cards by Card Holder ID: {}," +
                 " with Status: {}", holderId, status);
-        List<CardDTO> cardDTOS = cardService.getAllUserCardsByStatus(holderId, status);
-        return ResponseEntity.ok(cardDTOS);
+        List<CardDTO> responseCardDTOS = cardService.getAllUserCardsByStatus(holderId, status);
+        logger.debug("Request was successfully processed and response was sent: {}", responseCardDTOS);
+        return ResponseEntity.ok(responseCardDTOS);
     }
 
     @GetMapping("/expired/by-user-id/{holderId}")
     public ResponseEntity<List<CardDTO>> getAllExpiredCard(@PathVariable UUID holderId) {
-        logger.debug("Received GET request to get All Expired Cards by Card Holder ID: {}", holderId);
-        List<CardDTO> cardDTOS = cardService.getAllExpiredCards(holderId);
-        return ResponseEntity.ok(cardDTOS);
+        logger.info("Received GET request to get All Expired Cards by Card Holder ID: {}", holderId);
+        List<CardDTO> responseCardDTOS = cardService.getAllExpiredCards(holderId);
+        logger.debug("Request was successfully processed and response was sent: {}", responseCardDTOS);
+        return ResponseEntity.ok(responseCardDTOS);
     }
 
     @GetMapping("/active/by-user-id/{holderId}")
     public ResponseEntity<List<CardDTO>> getAllActiveCards(@PathVariable UUID holderId) {
-        logger.debug("Received GET request to get All Active Cards by Card Holder ID: {}", holderId);
-        List<CardDTO> cardDTOS = cardService.getAllActiveCards(holderId);
-        return ResponseEntity.ok(cardDTOS);
+        logger.info("Received GET request to get All Active Cards by Card Holder ID: {}", holderId);
+        List<CardDTO> responseCardDTOS = cardService.getAllActiveCards(holderId);
+        logger.debug("Request was successfully processed and response was sent: {}", responseCardDTOS);
+        return ResponseEntity.ok(responseCardDTOS);
     }
 
     @PatchMapping("/by-card-id/{cardId}/status")
     public ResponseEntity<CardDTO> updateCardStatusById(@PathVariable UUID cardId,
                                                         @RequestParam String status) {
-        logger.debug("Received PATCH request to update Status of Card by Card ID: {}," +
+        logger.info("Received PATCH request to update Status of Card by Card ID: {}," +
                 " with Status: {}", cardId, status);
-        CardDTO cardDTO = cardService.updateCardStatusById(cardId, status);
-        return ResponseEntity.ok(cardDTO);
+        CardDTO responseCardDTO = cardService.updateCardStatusById(cardId, status);
+        logger.debug("Request was successfully processed and response was sent: {}", responseCardDTO);
+        return ResponseEntity.ok(responseCardDTO);
     }
 
     @PatchMapping("/by-card-number/{cardNumber}/status")
     public ResponseEntity<CardDTO> updateCardStatusByCardNumber(@PathVariable String cardNumber,
                                                                 @RequestParam String status) {
-        logger.debug("Received PATCH request to update Status of Card by " +
+        logger.info("Received PATCH request to update Status of Card by " +
                 "Card Card Number: {}, with Status: {}", cardNumber, status);
-        CardDTO cardDTO = cardService.updateCardStatusByCardNumber(cardNumber, status);
-        return ResponseEntity.ok(cardDTO);
+        CardDTO responseCardDTO = cardService.updateCardStatusByCardNumber(cardNumber, status);
+        logger.debug("Request was successfully processed and response was sent: {}", responseCardDTO);
+        return ResponseEntity.ok(responseCardDTO);
     }
 
     @DeleteMapping("/by-card-id/{cardId}")
     public ResponseEntity<String> deleteCardById(@PathVariable UUID cardId) {
-        logger.debug("Received DELETE request to remove Card with ID: {}", cardId);
-        return cardService.deleteCardById(cardId);
+        logger.info("Received DELETE request to remove Card with ID: {}", cardId);
+        ResponseEntity<String> responseMessage = cardService.deleteCardById(cardId);
+        logger.debug("Request was successfully processed and response message was sent: {}", responseMessage);
+        return responseMessage;
     }
 
     @DeleteMapping("/by-account-id/{accountId}")
     public ResponseEntity<String> deleteAllAccountCardsByAccountId(@PathVariable UUID accountId) {
-        logger.debug("Received DELETE request to remove All Account Cards" +
+        logger.info("Received DELETE request to remove All Account Cards" +
                 " by Account ID: {}", accountId);
-        return cardService.deleteAllAccountCardsByAccountId(accountId);
+        ResponseEntity<String> responseMessage = cardService.deleteAllAccountCardsByAccountId(accountId);
+        logger.debug("Request was successfully processed and response message was sent: {}", responseMessage);
+        return responseMessage;
     }
 
     @DeleteMapping("/by-user-id/{cardHolderUUID}")
     public ResponseEntity<String> deleteAllUsersCardsByCardHolderUUID(@PathVariable UUID cardHolderUUID) {
-        logger.debug("Received DELETE request to remove All User Cards" +
+        logger.info("Received DELETE request to remove All User Cards" +
                 " by Holder ID: {}", cardHolderUUID);
-        return cardService.deleteAllUsersCardsByCardHolderUUID(cardHolderUUID);
+        ResponseEntity<String> responseMessage = cardService.deleteAllUsersCardsByCardHolderUUID(cardHolderUUID);
+        logger.debug("Request was successfully processed and response message was sent: {}", responseMessage);
+        return responseMessage;
     }
-
-
 }

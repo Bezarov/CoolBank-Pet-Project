@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.UUID;
 
 @Service
-public class AuthDetailsServiceImpl implements AuthDetailsService{
+public class AuthDetailsServiceImpl implements AuthDetailsService {
     private final Logger logger = LoggerFactory.getLogger(AuthDetailsServiceImpl.class);
     private final UsersRepository userRepository;
     private final AppComponentRepository componentRepository;
@@ -27,34 +27,38 @@ public class AuthDetailsServiceImpl implements AuthDetailsService{
     }
 
     public void authenticateUser(AuthRequestDTO authRequestDTO) {
-        logger.info("Attempting to find user with email: {} in DB", authRequestDTO.principal());
+        logger.info("Trying to find user with email: {}", authRequestDTO.principal());
         userRepository.findByEmail(authRequestDTO.principal().toString())
                 .filter(UserEntity ->
                         UserEntity.getEmail().equals(authRequestDTO.principal().toString()) &&
-                                passwordEncoder().matches(authRequestDTO.credentials().toString(), UserEntity.getPassword()))
+                                passwordEncoder().matches(authRequestDTO.credentials().toString(),
+                                        UserEntity.getPassword()))
                 .orElseThrow(() -> {
-                    logger.error("User with such Email: {} NOT FOUND in DB", authRequestDTO.principal());
+                    logger.error("User with such email not found: {}", authRequestDTO.principal());
                     return new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-                            "Authentication failed: Invalid user credentials");
+                            "Authentication failed: invalid user credentials");
                 });
+
+        logger.debug("User was found successfully");
         logger.info("User successfully authenticated: {}", authRequestDTO);
     }
 
     public Users authenticateUserToken(String principal) {
-        logger.info("Attempting to find User with email: {}", principal);
+        logger.info("Trying to find User with email: {}", principal);
         Users user = userRepository.findByEmail(principal)
                 .orElseThrow(() -> {
-                    logger.error("User Email extracted from the Token was NOT found in DB: {} ", principal);
+                    logger.error("User email extracted from the token was not found: {} ", principal);
                     return new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-                            "Invalid Token credentials");
+                            "Authentication failed: invalid user token credentials");
                 });
 
-        logger.info("User Token successfully authenticated: {}", user);
+        logger.debug("User was found successfully");
+        logger.info("Extracted user from token successfully authenticated");
         return user;
     }
 
     public void authenticateComponent(AuthRequestDTO authRequestDTO) {
-        logger.info("Attempting to find Component with ID: {}", authRequestDTO.principal());
+        logger.info("Trying to find Component with ID: {}", authRequestDTO.principal());
         componentRepository.findById(UUID.fromString(authRequestDTO.principal().toString()))
                 .filter(componentEntity -> componentEntity.getComponentId().toString().equals(
                         authRequestDTO.principal().toString()) &&
@@ -62,23 +66,24 @@ public class AuthDetailsServiceImpl implements AuthDetailsService{
                                 authRequestDTO.credentials().toString(), componentEntity.getComponentSecret())
                 )
                 .orElseThrow(() -> {
-                    logger.error("Component: {} NOT FOUND in DB ", authRequestDTO);
+                    logger.error("Component not found: {}", authRequestDTO);
                     return new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-                            "Authentication failed: Invalid component credentials");
+                            "Authentication failed: invalid component credentials");
                 });
+        logger.debug("Component was found successfully");
         logger.info("Component successfully authenticated: {}", authRequestDTO);
     }
 
     public AppComponent authenticateComponentToken(String principal) {
-        logger.info("Attempting to find Component with ID: {}", principal);
+        logger.info("Trying to find extracted Component ID from token: {}", principal);
         AppComponent component = componentRepository.findById(UUID.fromString(principal))
                 .orElseThrow(() -> {
-                    logger.error("Component ID extracted from the Token was NOT found in DB: {} ", principal);
+                    logger.error("Component ID extracted from the Token was not found: {} ", principal);
                     return new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-                            "Invalid Token credentials");
+                            "Authentication failed: invalid component token credentials");
                 });
-
-        logger.info("Component Token successfully authenticated: {}", principal);
+        logger.debug("Component was found successfully");
+        logger.info("Extracted component from token successfully authenticated");
         return component;
     }
 
